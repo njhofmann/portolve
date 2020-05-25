@@ -1,13 +1,9 @@
 package portfolio
 
 import java.util.*
-import kotlin.DoubleArray
-import kotlin.collections.List
 import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 import kotlin.math.abs
 import kotlin.random.Random
-import kotlin.reflect.jvm.internal.impl.descriptors.deserialization.PlatformDependentDeclarationFilter
 
 /**
  * Default implementation of the Portfolio interface, enforcing the following constraints:
@@ -88,7 +84,7 @@ class DefaultPortfolio : Portfolio {
         }
 
         // get random weights
-        var weights = DoubleArray(size) { x -> Random.Default.nextDouble(0.0, 1.0)}.toList()
+        var weights = DoubleArray(size) { _ -> Random.Default.nextDouble(0.0, 1.0)}.toList()
         val weightSum = weights.sum()
         weights = weights.map { it / weightSum }
 

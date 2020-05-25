@@ -6,6 +6,7 @@ plugins {
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
+
 repositories {
     mavenCentral()
 }
@@ -19,6 +20,13 @@ dependencies {
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
+
+sourceSets {
+    main {
+        java.srcDirs("src")
+    }
+}
+
 tasks {
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"

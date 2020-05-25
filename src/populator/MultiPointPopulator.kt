@@ -1,5 +1,6 @@
 package populator
 
+import normAllocs
 import normalize
 import portfolio.Allocation
 import portfolio.DefaultPortfolio
@@ -41,7 +42,7 @@ class MultiPointPopulator(private val crossoverPoints: Int) : AbstractPopulator(
     override fun populate(population: List<Portfolio>, targetSize: Int): List<Portfolio> {
         // TODO fix me
         val checks: MutableList<(List<Portfolio>) -> Unit> = ArrayList()
-        checks.add { ::invalidPopulation }
+        checks.add(::invalidPopulation)
         return super.populate(population, targetSize, checks)
     }
 }
