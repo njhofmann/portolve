@@ -1,5 +1,6 @@
 import portfolio.Allocation
 import kotlin.IllegalArgumentException
+import kotlin.math.round
 
 fun isNotUnitValue(value: Double): Boolean {
     return !(0.0 < value && value < 1.0)
@@ -10,11 +11,14 @@ fun normalize(doubles: List<Double>): List<Double> {
     return doubles.map { it / sum }
 }
 
+fun roundToNearestInt(num: Double): Int {
+    return round(num).toInt()
+}
+
 fun normAllocs(allocations: List<Allocation>): List<Allocation> {
     val normWeights = normalize(allocations.map { it.amount })
     return allocations.mapIndexed { idx, alloc -> Allocation(alloc.asset, normWeights[idx]) }
 }
-
 
 fun getPercentAtTick(startingPercent: Double, curTick: Int, maxTick: Int?): Double {
     if (0 > startingPercent || startingPercent > 1) {

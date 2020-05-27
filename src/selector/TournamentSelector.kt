@@ -5,8 +5,8 @@ import portfolio.Portfolio
 import kotlin.math.round
 import kotlin.random.Random
 
-class TournamentSelector(private val keepPercent: Double, private val tournySize: Int, private val iterations: Int) :
-    AbstractSelector(keepPercent, iterations) {
+class TournamentSelector(keepPercent: Double, endKeepPercent: Double?, iterations: Int?, private val tournySize: Int) :
+    AbstractSelector(keepPercent, endKeepPercent, iterations) {
 
     init {
         if (tournySize < 2) {
@@ -19,7 +19,7 @@ class TournamentSelector(private val keepPercent: Double, private val tournySize
         if (portfolios.size > tournySize) {
             throw IllegalArgumentException("portfolio size is greater than tournament size")
         }
-        val newPopSize = round(keepPercent * portfolios.size).toInt()
+        val newPopSize = round(getPercentAtTick() * portfolios.size).toInt()
         return (0..newPopSize).map {
             var bestIdx: Int? = null
             for (i in (0..tournySize)) {

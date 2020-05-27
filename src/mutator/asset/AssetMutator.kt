@@ -7,6 +7,6 @@ import portfolio.Portfolio
  */
 interface AssetMutator {
 
-    fun mutate(population: List<Portfolio>): List<Portfolio>
+    fun mutateAssets(population: List<Portfolio>): List<Portfolio>
 
 }

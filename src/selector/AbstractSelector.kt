@@ -1,20 +1,10 @@
 package selector
 
-import isNotUnitValue
+import AbstractRateAnnealer
 import portfolio.Portfolio
 
-abstract class AbstractSelector(private val selectPercent: Double, private val iters: Int?) : Selector {
-
-    protected var timesCalled: Int = 0
-
-    init {
-        if (iters != null && iters <= 0) {
-            throw IllegalArgumentException("number of iterations must be > 0")
-        }
-        else if (isNotUnitValue(selectPercent)) {
-            throw IllegalArgumentException("percentage of population to keep must be in (0, 1)")
-        }
-    }
+abstract class AbstractSelector(keepPercent: Double, endKeepPercent: Double?, iterations: Int?) : Selector,
+    AbstractRateAnnealer(keepPercent, endKeepPercent, iterations) {
 
     protected fun sizeCheck(portfolios: List<Portfolio>, scores: List<Double>) {
         if (portfolios.size != scores.size) {

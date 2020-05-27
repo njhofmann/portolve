@@ -6,5 +6,5 @@ import portfolio.Portfolio
  * Mutation operation for mutating the asset weights of a given Portfolio
  */
 interface WeightMutator {
-    fun mutate(population: List<Portfolio>): List<Portfolio>
+    fun mutateWeights(population: List<Portfolio>): List<Portfolio>
 }

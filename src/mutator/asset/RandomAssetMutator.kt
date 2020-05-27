@@ -1,26 +1,22 @@
 package mutator.asset
 
 import getPercentAtTick
+import mutator.AbstractMutator
 import mutator.asset.AssetMutator
 import portfolio.Allocation
 import portfolio.DefaultPortfolio
 import portfolio.Portfolio
 import kotlin.random.Random
 
-class RandomAssetMutator(private val assetUniverse: Int, private val mutationRate: Double,
-                         private val iterations: Int?) : AssetMutator {
+class RandomAssetMutator(mutationRate: Double, finalMutationRate: Double?, iterations: Int?, assetUniverse: Int) :
+    AssetMutator, AbstractMutator(mutationRate, finalMutationRate, iterations) {
 
     private val allAssets: Set<Int> = (0..assetUniverse).toHashSet()
 
-    private var timesCalled: Int = 0
-
-    private fun getCurrentPercentage(): Double {
-        val toReturn = getPercentAtTick(mutationRate, timesCalled, iterations)
-        timesCalled++
-        return toReturn
-    }
+    private var availableAssets: MutableSet<Int>? = null
 
     private fun getAvailableAssets(portfolio: Portfolio): MutableSet<Int> {
+        // TODO check portfolio assets are in universe
         return (allAssets - portfolio.allocations.map { it.asset }).toMutableSet()
     }
 
@@ -30,26 +26,20 @@ class RandomAssetMutator(private val assetUniverse: Int, private val mutationRat
         return Pair(assets, selectedAsset)
     }
 
-    private fun toMutate(threshold: Double): Boolean {
-        return Random.nextDouble(0.0, 1.0) < threshold
+    override fun mutateAllocation(allocation: Allocation): Allocation {
+        val selected = getRandomAssetNoReplacement(availableAssets!!)
+        availableAssets = selected.first
+        return Allocation(selected.second, allocation.amount)
     }
 
-    private fun mutatePortfolio(portfolio: Portfolio, mutationThreshold: Double): Portfolio {
+    override fun mutatePortfolio(portfolio: Portfolio): Portfolio {
         // TODO case where more items are mutated than available
-        var availableAssets = getAvailableAssets(portfolio)
-        return DefaultPortfolio(portfolio.allocations.map { x: Allocation ->
-            if (toMutate(mutationThreshold)) {
-                val selected = getRandomAssetNoReplacement(availableAssets)
-                availableAssets = selected.first
-                Allocation(selected.second, x.amount)
-            } else {
-                x
-            }
-        })
+        // update available assets with each new portfolio
+        availableAssets = getAvailableAssets(portfolio)
+        return super.mutatePortfolio(portfolio)
     }
 
-    override fun mutate(population: List<Portfolio>): List<Portfolio> {
-        val mutationChange = getCurrentPercentage()
-        return population.map { mutatePortfolio(it, mutationChange) }
+    override fun mutateAssets(population: List<Portfolio>): List<Portfolio> {
+        return mutatePortfolios(population)
     }
 }

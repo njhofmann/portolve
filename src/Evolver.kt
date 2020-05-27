@@ -58,8 +58,8 @@ class Evolver(private val assets: List<String>, private val selector: Selector,
                 break
             }
             population = this.selector.prune(population, scores)
-            population = this.assetMutator.mutate(population)
-            population = this.weightMutator.mutate(population)
+            population = this.assetMutator.mutateAssets(population)
+            population = this.weightMutator.mutateWeights(population)
             population = this.populator.populate(population, popSize)
         }
         return this.namePortfolio(getBest(population, this.fitnessMetric))
