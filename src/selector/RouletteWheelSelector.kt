@@ -7,7 +7,7 @@ import kotlin.math.round
 import kotlin.random.Random
 
 class RouletteWheelSelector(private val keepPercent: Double, private val iterations: Int) :
-        AbstractSelector(iterations) {
+        AbstractSelector(keepPercent, iterations) {
 
     private fun getCurrentPercent(): Double {
         // TODO is this the right way to decay selection percent?

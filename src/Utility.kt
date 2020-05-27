@@ -1,7 +1,11 @@
 import portfolio.Allocation
 import kotlin.IllegalArgumentException
 
-public fun normalize(doubles: List<Double>): List<Double> {
+fun isNotUnitValue(value: Double): Boolean {
+    return !(0.0 < value && value < 1.0)
+}
+
+fun normalize(doubles: List<Double>): List<Double> {
     val sum = doubles.sum()
     return doubles.map { it / sum }
 }

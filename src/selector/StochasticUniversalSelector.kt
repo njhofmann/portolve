@@ -6,7 +6,7 @@ import kotlin.math.round
 import kotlin.random.Random
 
 class StochasticUniversalSelector(private val keepPercent: Double, private val iterations: Int) :
-        AbstractSelector(iterations) {
+        AbstractSelector(keepPercent, iterations) {
 
     private fun getCurKeepPercent(): Double {
         // TODO is this increasing or decreasing?

@@ -1,14 +1,18 @@
 package selector
 
+import isNotUnitValue
 import portfolio.Portfolio
 
-abstract class AbstractSelector(private val iters: Int?) : Selector {
+abstract class AbstractSelector(private val selectPercent: Double, private val iters: Int?) : Selector {
 
     protected var timesCalled: Int = 0
 
     init {
         if (iters != null && iters <= 0) {
             throw IllegalArgumentException("number of iterations must be > 0")
+        }
+        else if (isNotUnitValue(selectPercent)) {
+            throw IllegalArgumentException("percentage of population to keep must be in (0, 1)")
         }
     }
 
