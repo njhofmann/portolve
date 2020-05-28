@@ -14,7 +14,7 @@ abstract class AbstractFitnessMetric(private val assetsToReturns: List<Pair<Stri
         return assetsToReturns[i].second
     }
 
-    abstract fun score(portfolio: Portfolio): Double
+    protected abstract fun score(portfolio: Portfolio): Double
 
     override fun evaluate(population: List<Portfolio>): List<Double> {
         return population.map { score(it) }

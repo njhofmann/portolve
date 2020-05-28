@@ -1,8 +1,6 @@
 Priorities:
 1. prevent duplicate assets in crossover
 1. fitness functions
-    1. take in list of daily returns for each asset
-    1. mean-variance metric
     1. treynor metric
 1. get data sources
 1. comprehensive argparser

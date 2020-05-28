@@ -37,7 +37,7 @@ class MeanVarianceMetric(assetsToReturns: List<Pair<String, List<Double>>>, priv
     }
 
     override fun score(portfolio: Portfolio): Double {
-        // TODO edge cases for lambda of 1 and 0
+        // edge cases for lambda of 1 and 0
         val selectedReturns = portfolio.allocations.map { Pair(it.amount, getIthAssetReturns(it.asset)) }
         val expectedReturn = selectedReturns.map { it.first * it.second.average() }.sum()
         val portfolioRisk = computeRisk(selectedReturns.map { it.first }, selectedReturns.map { it.second })

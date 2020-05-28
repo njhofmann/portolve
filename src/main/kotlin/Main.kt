@@ -8,6 +8,6 @@ fun printSolution(solution: List<Pair<String, Double>>) {
 fun main() {
 
 
-    //val solution: List<Pair<String, Double>> = Evolver().findSolution()
+    // val solution: List<Pair<String, Double>> = Evolver().findSolution()
     //printSolution(solution)
 }
