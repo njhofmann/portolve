@@ -1,6 +1,5 @@
 package selector
 
-import fitness.FitnessMetric
 import portfolio.Portfolio
 
 /**

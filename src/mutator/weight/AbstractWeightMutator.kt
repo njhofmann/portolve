@@ -1,13 +1,8 @@
 package mutator.weight
 
-import AbstractRateAnnealer
-import isNotUnitValue
 import mutator.AbstractMutator
-import normAllocs
 import portfolio.Allocation
-import portfolio.DefaultPortfolio
 import portfolio.Portfolio
-import kotlin.random.Random
 
 abstract class AbstractWeightMutator(mutationRate: Double, finalMutationRate: Double?, iterations: Int?) :
     WeightMutator, AbstractMutator(mutationRate, finalMutationRate, iterations) {

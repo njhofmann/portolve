@@ -1,6 +1,5 @@
 package selector
 
-import fitness.FitnessMetric
 import portfolio.Portfolio
 import kotlin.math.round
 import kotlin.random.Random

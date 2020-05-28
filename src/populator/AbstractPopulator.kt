@@ -1,7 +1,5 @@
 package populator
 
-import normalize
-import portfolio.Allocation
 import portfolio.Portfolio
 import java.util.*
 import kotlin.math.ceil

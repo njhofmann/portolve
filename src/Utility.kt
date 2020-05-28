@@ -1,5 +1,4 @@
 import portfolio.Allocation
-import kotlin.IllegalArgumentException
 import kotlin.math.round
 
 fun isNotUnitValue(value: Double): Boolean {

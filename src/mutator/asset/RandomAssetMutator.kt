@@ -1,12 +1,8 @@
 package mutator.asset
 
-import getPercentAtTick
 import mutator.AbstractMutator
-import mutator.asset.AssetMutator
 import portfolio.Allocation
-import portfolio.DefaultPortfolio
 import portfolio.Portfolio
-import kotlin.random.Random
 
 class RandomAssetMutator(mutationRate: Double, finalMutationRate: Double?, iterations: Int?, assetUniverse: Int) :
     AssetMutator, AbstractMutator(mutationRate, finalMutationRate, iterations) {

@@ -1,9 +1,7 @@
 package selector
 
-import getPercentAtTick
 import portfolio.Portfolio
 import roundToNearestInt
-import kotlin.math.round
 import kotlin.random.Random
 
 class StochasticUniversalSelector(keepPercent: Double, endKeepPercent: Double?, iterations: Int?) :

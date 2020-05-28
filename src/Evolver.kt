@@ -7,7 +7,6 @@ import portfolio.Portfolio
 import portfolio.getBest
 import portfolio.getRandomPopulation
 import selector.Selector
-import java.lang.IllegalArgumentException
 
 /**
  * An evolutionary algorithm constructed from the given operation classes (Mutator, Selectors,

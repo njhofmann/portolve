@@ -1,11 +1,7 @@
 package selector
 
-import AbstractRateAnnealer
-import getPercentAtTick
 import portfolio.Portfolio
 import roundToNearestInt
-import java.lang.IllegalArgumentException
-import kotlin.math.round
 import kotlin.random.Random
 
 class RouletteWheelSelector(keepPercent: Double, endKeepPercent: Double?, iterations: Int?) :

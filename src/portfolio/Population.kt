@@ -1,7 +1,6 @@
 package portfolio
 
 import fitness.FitnessMetric
-import selector.Selector
 
 fun getRandomPopulation(assetUniverse: Int, popSize: Int, portfolioSize: Int): List<Portfolio> {
     return (0..popSize).map { DefaultPortfolio(assetUniverse, portfolioSize) }

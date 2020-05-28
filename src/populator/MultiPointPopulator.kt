@@ -1,7 +1,6 @@
 package populator
 
 import normAllocs
-import normalize
 import portfolio.Allocation
 import portfolio.DefaultPortfolio
 import portfolio.Portfolio

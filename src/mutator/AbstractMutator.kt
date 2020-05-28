@@ -17,10 +17,8 @@ abstract class AbstractMutator(mutationRate: Double, finalMutationRate: Double?,
 
     protected abstract fun mutateAllocation(allocation: Allocation): Allocation
 
-    protected fun mutatePortfolio(portfolio: Portfolio): Portfolio {
-        val mutatedAllocs = portfolio.allocations.map {
-            if (toMutate()) mutateAllocation(it) else it
-        }
+    protected open fun mutatePortfolio(portfolio: Portfolio): Portfolio {
+        val mutatedAllocs = portfolio.allocations.map { if (toMutate()) mutateAllocation(it) else it }
         return DefaultPortfolio(normAllocs(mutatedAllocs))
     }
 

@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.7.3")
+    implementation("org.nield:kotlin-statistics:1.2.1")
     implementation(kotlin("stdlib-jdk8"))
     testImplementation("junit", "junit", "4.12")
 }
