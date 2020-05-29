@@ -13,7 +13,7 @@ class ArgParser {
         } else if (this.args.any { name == it.name || abbrev == it.abbrev || name == it.abbrev || abbrev == it.name }) {
             throw IllegalArgumentException("duplicate argument with name %s and abbrev %s".format(name, abbrev))
         }
-        args.add(Arg("-$name", "-$abbrev", required))
+        args.add(Arg(name, abbrev, required))
     }
 
     private fun getRequiredArgs(): Set<String> {
@@ -21,13 +21,13 @@ class ArgParser {
     }
 
     private fun isValidArgName(arg: String, namedArg: Arg): Boolean {
-        return arg == namedArg.name || arg == namedArg.abbrev
+        return arg == ("-" + namedArg.name) || arg == ("-" + namedArg.abbrev)
     }
 
     private fun getArgName(arg: String): String {
         args.forEach {
             if (isValidArgName(arg, it)) {
-                return it.name.substring(1)
+                return it.name
             }
         }
         throw RuntimeException("%s is an unregistered argument".format(arg))
@@ -47,7 +47,7 @@ class ArgParser {
     private fun findParams(args: List<String>): Map<String, List<String>> {
         val argsToParams: MutableMap<String, List<String>> = HashMap()
         var idx = 0
-        while (idx < this.args.size) {
+        while (idx <= (args.size - 1)) {
             val endIdx = findNextParam(args, idx)
             val argName = getArgName(args[idx])
             argsToParams[argName] = args.subList(idx + 1, endIdx)
