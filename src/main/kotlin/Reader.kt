@@ -11,12 +11,7 @@ fun mean(nums: List<Double>): Double {
 fun computeReturns(prices: List<String>): List<Double> {
     val typedPrices = prices.map { it.toDouble() }
     return typedPrices.mapIndexed { idx, price ->
-        if (idx == typedPrices.size - 1) {
-            price
-        }
-        else {
-            (price - typedPrices[idx+1]) / typedPrices[idx+1]
-        }
+        if (idx == typedPrices.size - 1) price else (price - typedPrices[idx+1]) / typedPrices[idx+1]
     }
 }
 
