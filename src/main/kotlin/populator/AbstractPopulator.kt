@@ -8,10 +8,9 @@ import randomItemNoReplacement
 import java.util.*
 import kotlin.math.ceil
 
-abstract class AbstractPopulator(private val assetUniverse: Int) : Populator {
+abstract class AbstractPopulator(assetUniverse: Int) : Populator {
 
     private val assetUniverseSet: Set<Int>
-
 
     init {
         if (assetUniverse < 1) {
@@ -66,11 +65,18 @@ abstract class AbstractPopulator(private val assetUniverse: Int) : Populator {
             if (dupAssets.contains(it.asset)) {
                 dupAssets.remove(it.asset)
                 val newAsset: Int
-                if (unselectedAssets.isNotEmpty()) {
-                    newAsset = randomItemNoReplacement(unselectedAssets)
-                    unselectedAssetUniverse.remove(newAsset)
-                } else {
-                    newAsset = randomItemNoReplacement(unselectedAssetUniverse)
+                when {
+                    unselectedAssets.isNotEmpty() -> {
+                        newAsset = randomItemNoReplacement(unselectedAssets)
+                        unselectedAssetUniverse.remove(newAsset)
+                    }
+                    unselectedAssetUniverse.isNotEmpty() -> {
+                        newAsset = randomItemNoReplacement(unselectedAssetUniverse)
+                    }
+                    else -> {
+                        print("asset universe not big enough to prevent duplicate assets in children")
+                        newAsset = it.asset
+                    }
                 }
                 Allocation(newAsset, it.amount)
             } else {
@@ -102,7 +108,7 @@ abstract class AbstractPopulator(private val assetUniverse: Int) : Populator {
         checks?.forEach { it(population) }
 
         val breedCount = ceil((population.size - targetSize) / 2.0).toInt()
-        val children: LinkedList<Portfolio> = unzipPairs((0..breedCount).map {
+        val children: LinkedList<Portfolio> = unzipPairs((0 until breedCount).map {
             val parents = getUniqueParents(population)
             createChild(parents.first, parents.second)
         })

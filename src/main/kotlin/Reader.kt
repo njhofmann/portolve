@@ -4,10 +4,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-fun mean(nums: List<Double>): Double {
-    return nums.sum() / nums.size
-}
-
 fun computeReturns(prices: List<String>): List<Double> {
     val typedPrices = prices.map { it.toDouble() }
     return typedPrices.mapIndexed { idx, price ->
