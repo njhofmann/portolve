@@ -27,6 +27,9 @@ Priorities:
 1. Local search methods
     1. Baldwin effect
     1. Lamarckism
+    1. hill-climbing
+    1. simulated annealing
+    1. beam 
     
 - how to measure portfolio success with test set?
 - asset performance = weighted sum of all returns

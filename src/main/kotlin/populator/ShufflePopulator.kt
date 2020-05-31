@@ -17,7 +17,7 @@ class ShufflePopulator : AbstractPopulator() {
             childA[i] = if (isTrue) a.allocations[i] else b.allocations[i]
             childB[i] = if (isTrue) b.allocations[i] else a.allocations[i]
         }
-        return Pair(DefaultPortfolio(normAllocs(childA)), DefaultPortfolio(normAllocs(childB)))
+        return repairChildren(childA, childB, a, b)
     }
 
     override fun populate(population: List<Portfolio>, targetSize: Int): List<Portfolio> {

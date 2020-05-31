@@ -13,13 +13,12 @@ class MultiPointPopulator(private val crossoverPoints: Int) : AbstractPopulator(
         }
     }
 
-    private fun invalidPopulation(portfolios: List<Portfolio>): Unit {
+    private fun invalidPopulation(portfolios: List<Portfolio>) {
         if (portfolios.any { it.size % crossoverPoints != 0 }) {
             throw IllegalArgumentException(("population contains a portfolio with that does not" +
                     "factor %d crossover points").format(crossoverPoints))
         }
     }
-
 
     override fun createChild(a: Portfolio, b: Portfolio): Pair<Portfolio, Portfolio> {
         checkSameSize(a, b)
@@ -34,12 +33,10 @@ class MultiPointPopulator(private val crossoverPoints: Int) : AbstractPopulator(
             childA.addAll(if (isEven) aSection else bSection)
             childB.addAll(if (isEven) bSection else aSection)
         }
-
-        return Pair(DefaultPortfolio(normAllocs(childA)), DefaultPortfolio(normAllocs(childB)))
+        return repairChildren(childA, childB, a, b)
     }
 
     override fun populate(population: List<Portfolio>, targetSize: Int): List<Portfolio> {
-        // TODO fix me
         val checks: MutableList<(List<Portfolio>) -> Unit> = ArrayList()
         checks.add(::invalidPopulation)
         return super.populate(population, targetSize, checks)

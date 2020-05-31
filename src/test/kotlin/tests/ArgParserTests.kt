@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import java.lang.IllegalArgumentException
 import java.lang.RuntimeException
 
-
 class ArgParserTests {
 
     var parser = ArgParser()
