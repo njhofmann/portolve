@@ -3,8 +3,8 @@ package mutator.weight
 import isNotUnitValue
 import java.util.*
 
-class GaussianWeightWeightMutator(private val boundary: Double, mutationRate: Double, finalMutationRate: Double? = null,
-                                  iterations: Int? = null) :
+class GaussianWeightMutator(private val boundary: Double, mutationRate: Double, finalMutationRate: Double? = null,
+                            iterations: Int? = null) :
         AbstractWeightMutator(mutationRate, finalMutationRate, iterations) {
 
     private val randGenerator = Random()

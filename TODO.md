@@ -1,4 +1,4 @@
-## Priorities
+## Checklist
 1. prevent duplicate assets in crossover
     1. double check
 1. fitness functions
@@ -13,11 +13,8 @@
 
 ## Stuff
 1. Separate function objects for individual parts of algorithm
-    1. mutation
-        1. alters one or more gene values 
-    2. crossover
+    1. crossover
         1. double check dup repair check
-    3. selection method
     1. elitism
     1. migration
     
@@ -36,11 +33,12 @@
     1. beam search
     
 1. Misc
-    - how to measure portfolio success with test set?
-    - asset performance = weighted sum of all returns
-    - covariance metric?
+    1. train & test split
+    1. asset performance = weighted average of all returns
 
-### Write Up
+### Write Up Topics
+- Multi objective optimization
+- Evolutionary algorithms
 - Modern portfolio optimization
 - Mean-variance model
 - Types of constraints

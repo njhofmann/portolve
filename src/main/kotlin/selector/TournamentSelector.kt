@@ -5,8 +5,8 @@ import roundToNearestInt
 import kotlin.math.round
 import kotlin.random.Random
 
-class TournamentSelector(private val tournySize: Int, keepPercent: Double, endKeepPercent: Double?, iterations: Int?) :
-    AbstractSelector(keepPercent, endKeepPercent, iterations) {
+class TournamentSelector(private val tournySize: Int, keepPercent: Double, endKeepPercent: Double? = null,
+                         iterations: Int? = null) : AbstractSelector(keepPercent, endKeepPercent, iterations) {
 
     init {
         if (tournySize < 2) {
@@ -21,14 +21,14 @@ class TournamentSelector(private val tournySize: Int, keepPercent: Double, endKe
         }
         val newPopSize = roundToNearestInt(getPercentAtTick() * portfolios.size)
         return (0 until newPopSize).map {
-            var bestIdx: Int? = null
+            var bestIdx: Int = -1
             (0 until tournySize).forEach { _ ->
                 val randIdx = Random.nextInt(0, portfolios.size)
-                if (bestIdx == null || fitnessScores[randIdx] > fitnessScores[bestIdx!!]) {
+                if (bestIdx < 0 || fitnessScores[randIdx] > fitnessScores[bestIdx]) {
                     bestIdx = randIdx
                 }
             }
-            portfolios[bestIdx!!]
+            portfolios[bestIdx]
         }
     }
 }

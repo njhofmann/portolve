@@ -4,7 +4,7 @@ import portfolio.Portfolio
 import roundToNearestInt
 import kotlin.random.Random
 
-class StochasticUniversalSelector(keepPercent: Double, endKeepPercent: Double?, iterations: Int?) :
+class StochasticUniversalSelector(keepPercent: Double, endKeepPercent: Double? = null, iterations: Int? = null) :
         AbstractSelector(keepPercent, endKeepPercent, iterations) {
 
     override fun prune(portfolios: List<Portfolio>, fitnessScores: List<Double>): List<Portfolio> {

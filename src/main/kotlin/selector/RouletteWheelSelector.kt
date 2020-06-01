@@ -4,7 +4,7 @@ import portfolio.Portfolio
 import roundToNearestInt
 import kotlin.random.Random
 
-class RouletteWheelSelector(keepPercent: Double, endKeepPercent: Double?, iterations: Int?) :
+class RouletteWheelSelector(keepPercent: Double, endKeepPercent: Double? = null, iterations: Int? = null) :
     AbstractSelector(keepPercent, endKeepPercent, iterations) {
 
     private fun getRandPortfolioIdx(percentiles: List<Double>): Int {
