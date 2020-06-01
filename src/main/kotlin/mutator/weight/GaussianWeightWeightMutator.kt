@@ -3,7 +3,7 @@ package mutator.weight
 import isNotUnitValue
 import java.util.*
 
-class GaussianWeightWeightMutator(mutationRate: Double, finalMutationRate: Double?, iterations: Int?,
+class GaussianWeightWeightMutator(mutationRate: Double, finalMutationRate: Double? = null, iterations: Int? = null,
                                   private val boundary: Double) :
         AbstractWeightMutator(mutationRate, finalMutationRate, iterations) {
 

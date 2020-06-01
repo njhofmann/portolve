@@ -3,7 +3,7 @@ package mutator.weight
 import isNotUnitValue
 import kotlin.random.Random
 
-class UniformWeightWeightMutator(mutationRate: Double, finalMutationRate: Double?, iterations: Int?,
+class UniformWeightWeightMutator(mutationRate: Double, finalMutationRate: Double? = null, iterations: Int? = null,
                                  private val boundary: Double) :
     AbstractWeightMutator(mutationRate, finalMutationRate, iterations) {
 

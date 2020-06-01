@@ -4,10 +4,11 @@ import mutator.AbstractMutator
 import portfolio.Allocation
 import portfolio.Portfolio
 
-class RandomAssetMutator(mutationRate: Double, finalMutationRate: Double?, iterations: Int?, assetUniverse: Int) :
+class RandomAssetMutator(assetUniverse: Int, mutationRate: Double, finalMutationRate: Double? = null,
+                         iterations: Int? = null) :
     AssetMutator, AbstractMutator(mutationRate, finalMutationRate, iterations) {
 
-    private val allAssets: Set<Int> = (0..assetUniverse).toHashSet()
+    private val allAssets: Set<Int> = (0 until assetUniverse).toHashSet()
 
     private var availableAssets: MutableSet<Int>? = null
 

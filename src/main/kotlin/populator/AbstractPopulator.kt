@@ -1,6 +1,5 @@
 package populator
 
-import normAllocs
 import portfolio.Allocation
 import portfolio.DefaultPortfolio
 import portfolio.Portfolio
@@ -85,17 +84,48 @@ abstract class AbstractPopulator(assetUniverse: Int) : Populator {
         }
     }
 
-    private fun repairChild(child: List<Allocation>, unselectedParentAssets: MutableSet<Int>): Portfolio {
-        return DefaultPortfolio(normAllocs(removeDupAssets(child, unselectedParentAssets)))
+    private fun repairChild(assets: List<Allocation>, mask: BooleanArray, unselectedAssets: MutableSet<Int>): Portfolio {
+        return DefaultPortfolio(proportionalReallocation(removeDupAssets(assets, unselectedAssets), mask))
     }
 
-    protected fun repairChildren(firstChild: List<Allocation>, secondChild: List<Allocation>, firstParent: Portfolio,
-        secondParent: Portfolio): Pair<Portfolio, Portfolio> {
-        val parentAssets = (firstParent.allocations.map { it.asset } + secondParent.allocations.map { it.asset }).toSet()
-        val unselectedFirstChildAssets = (parentAssets - firstChild.map { it.asset }).toMutableSet()
-        val unselectedSecondChildAssets = (parentAssets - secondChild.map { it.asset }).toMutableSet()
-        return Pair(repairChild(firstChild, unselectedFirstChildAssets),
-            repairChild(secondChild, unselectedSecondChildAssets))
+    protected fun repairChildren(first: List<Allocation>, second: List<Allocation>, firstMask: BooleanArray,
+                                 secondMask: BooleanArray, parentA: Portfolio, parentB: Portfolio):
+            Pair<Portfolio, Portfolio> {
+        val parentAssets = (parentA.allocations.map { it.asset } + parentB.allocations.map { it.asset }).toSet()
+        val unselectedFirstAssets = (parentAssets - first.map { it.asset }).toMutableSet()
+        val unselectedSecondAssets = (parentAssets - second.map { it.asset }).toMutableSet()
+        val repairedFirst = repairChild(first, firstMask, unselectedFirstAssets)
+        val repairedSecond = repairChild(second, secondMask, unselectedSecondAssets)
+        return Pair(repairedFirst, repairedSecond)
+    }
+
+    private fun mergeAdjustedAssets(a: LinkedList<Pair<Allocation, Int>>, b: LinkedList<Pair<Allocation, Int>>): List<Allocation> {
+        val merged = (0 until (a.size + b.size)).map { (if (a.peekFirst().second == it) a else b).pop().first }
+        assert(a.isEmpty() && b.isEmpty())  // TODO does this work?
+        return merged
+    }
+
+    private fun readjustAssets(assets: LinkedList<Pair<Allocation, Int>>, totalSize: Int): LinkedList<Pair<Allocation, Int>> {
+        val reallocFactor = assets.map { it.first.amount }.sum() / (assets.size / totalSize)
+        return LinkedList(assets.map { Pair(Allocation(it.first.asset, it.first.amount * reallocFactor), it.second) })
+    }
+
+    /**
+     * Proportionately reallocation the weights of the given list of Allocations, based on the percentage of Allocations
+     * come from - i.e. if a parent contributed half of the Allocations in the list, the weights of those Allocations
+     * are adjusted to make up 50% of the make up of the List. The given Boolean mask signals which parent contributed
+     * the ith Allocation - true from parent A, false for B.
+     * @param assets: list of Allocations to adjust
+     * @param parentMask: Boolean mask signalling Allocation parentage
+     * @return: assets with proportionately readjusted weights
+     */
+    private fun proportionalReallocation(assets: List<Allocation>, parentMask: BooleanArray): List<Allocation> {
+        val firstAllocs = LinkedList<Pair<Allocation, Int>>()
+        val secondAllocs = LinkedList<Pair<Allocation, Int>>()
+        assets.forEachIndexed { idx, a -> (if (parentMask[idx]) firstAllocs else secondAllocs).add(Pair(a, idx)) }
+        val readjustedFirst = readjustAssets(firstAllocs, assets.size)
+        val readjustedSecond = readjustAssets(secondAllocs, assets.size)
+        return mergeAdjustedAssets(readjustedFirst, readjustedSecond)
     }
 
     protected fun populate(population: List<Portfolio>, targetSize: Int, checks: List<(List<Portfolio>) -> Unit>?):
