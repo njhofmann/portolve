@@ -20,9 +20,7 @@ abstract class AbstractPopulator(assetUniverse: Int) : Populator {
 
     private fun checkSizes(population: List<Portfolio>, targetSize: Int) {
         if (population.isEmpty() || targetSize < 0) {
-            throw IllegalArgumentException(
-                "require non-empty population and new population size > 0"
-            )
+            throw IllegalArgumentException("require non-empty population and new population size > 0")
         }
     }
 

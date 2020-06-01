@@ -11,8 +11,8 @@ class RouletteWheelSelector(keepPercent: Double, endKeepPercent: Double?, iterat
         // with replacement
         var cumPercentage = 0.0
         val threshold: Double = Random.nextDouble(0.0, 1.0)
-        for ((idx, percentile) in percentiles.withIndex()) {
-            cumPercentage += percentile
+        percentiles.forEachIndexed { idx, percent ->
+            cumPercentage += percent
             if (threshold < cumPercentage) {
                 return idx
             }

@@ -24,7 +24,7 @@ class MeanVarianceMetric(assetsToReturns: List<Pair<String, List<Double>>>, priv
     }
 
     private fun computeRisk(selectedWeights: List<Double>, selectedReturns: List<List<Double>>): Double {
-        var history: MutableMap<Set<Pair<Int, Int>>, Double> = HashMap();
+        val history: MutableMap<Set<Pair<Int, Int>>, Double> = HashMap();
         return selectedReturns.mapIndexed { idx, iList ->
             selectedReturns.mapIndexed { jdx, jList ->
                 val idxKey = createKey(idx, jdx)
@@ -37,7 +37,7 @@ class MeanVarianceMetric(assetsToReturns: List<Pair<String, List<Double>>>, priv
     }
 
     override fun score(portfolio: Portfolio): Double {
-        // edge cases for lambda of 1 and 0
+        // TODO edge cases for lambda of 1 and 0
         val selectedReturns = portfolio.allocations.map { Pair(it.amount, getIthAssetReturns(it.asset)) }
         val expectedReturn = selectedReturns.map { it.first * it.second.average() }.sum()
         val portfolioRisk = computeRisk(selectedReturns.map { it.first }, selectedReturns.map { it.second })

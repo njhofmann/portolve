@@ -1,10 +1,11 @@
 package selector
 
 import portfolio.Portfolio
+import roundToNearestInt
 import kotlin.math.round
 import kotlin.random.Random
 
-class TournamentSelector(keepPercent: Double, endKeepPercent: Double?, iterations: Int?, private val tournySize: Int) :
+class TournamentSelector(private val tournySize: Int, keepPercent: Double, endKeepPercent: Double?, iterations: Int?) :
     AbstractSelector(keepPercent, endKeepPercent, iterations) {
 
     init {
@@ -18,12 +19,12 @@ class TournamentSelector(keepPercent: Double, endKeepPercent: Double?, iteration
         if (portfolios.size > tournySize) {
             throw IllegalArgumentException("portfolio size is greater than tournament size")
         }
-        val newPopSize = round(getPercentAtTick() * portfolios.size).toInt()
-        return (0..newPopSize).map {
+        val newPopSize = roundToNearestInt(getPercentAtTick() * portfolios.size)
+        return (0 until newPopSize).map {
             var bestIdx: Int? = null
-            for (i in (0..tournySize)) {
+            (0 until tournySize).forEach { _ ->
                 val randIdx = Random.nextInt(0, portfolios.size)
-                if (bestIdx == null || fitnessScores[randIdx] > fitnessScores[bestIdx]) {
+                if (bestIdx == null || fitnessScores[randIdx] > fitnessScores[bestIdx!!]) {
                     bestIdx = randIdx
                 }
             }

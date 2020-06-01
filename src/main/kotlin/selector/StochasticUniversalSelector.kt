@@ -14,8 +14,8 @@ class StochasticUniversalSelector(keepPercent: Double, endKeepPercent: Double?, 
         var threshold: Double = Random.nextDouble(0.0, pointerDist)
         val percentiles: List<Double> = normalizedPercentiles(fitnessScores)
 
-        var idx: Int = 0
-        return (0..numToSelect).map {
+        var idx = 0
+        return (0 until numToSelect).map {
             threshold += if (it == 0) 0.0 else pointerDist
             while (threshold > percentiles[idx]) {
                 idx++

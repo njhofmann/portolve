@@ -3,6 +3,7 @@ package mutator.asset
 import mutator.AbstractMutator
 import portfolio.Allocation
 import portfolio.Portfolio
+import randomItemNoReplacement
 
 class RandomAssetMutator(assetUniverse: Int, mutationRate: Double, finalMutationRate: Double? = null,
                          iterations: Int? = null) :
@@ -17,16 +18,8 @@ class RandomAssetMutator(assetUniverse: Int, mutationRate: Double, finalMutation
         return (allAssets - portfolio.allocations.map { it.asset }).toMutableSet()
     }
 
-    private fun getRandomAssetNoReplacement(assets: MutableSet<Int>): Pair<MutableSet<Int>, Int> {
-        val selectedAsset: Int = assets.random()
-        assets.remove(selectedAsset)
-        return Pair(assets, selectedAsset)
-    }
-
     override fun mutateAllocation(allocation: Allocation): Allocation {
-        val selected = getRandomAssetNoReplacement(availableAssets!!)
-        availableAssets = selected.first
-        return Allocation(selected.second, allocation.amount)
+        return Allocation(randomItemNoReplacement(availableAssets!!), allocation.amount)
     }
 
     override fun mutatePortfolio(portfolio: Portfolio): Portfolio {

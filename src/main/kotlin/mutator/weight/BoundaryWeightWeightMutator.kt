@@ -1,7 +1,7 @@
 package mutator.weight
 
-class BoundaryWeightWeightMutator(mutationRate: Double, finalMutationRate: Double? = null, iterations: Int? = null,
-                                  private val boundary: Double) :
+class BoundaryWeightWeightMutator(private val boundary: Double, mutationRate: Double, finalMutationRate: Double? = null,
+                                  iterations: Int? = null) :
         AbstractWeightMutator(mutationRate, finalMutationRate, iterations) {
 
     override fun getMutationValue(): Double {
