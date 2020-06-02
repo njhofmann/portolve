@@ -5,8 +5,17 @@
     1. treynor metric
     1. continous metrics
 1. boundary enforcement / allocation cap
+    1. mutation
+    1. crossover
+    1. random creation
+1. wrap params into helper objects
+    1. boundary
+        1, boundary * popsize >= 1
+    1. iteration
 1. get data sources
+1. how to do checks?
 1. comprehensive argparser
+1. make portfolio wrapper around portfolio
 1. documentation catch up
 1. refactoring
 1. config file

@@ -1,7 +1,6 @@
 package portfolio
 
-import java.util.*
-import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -22,6 +21,8 @@ class DefaultPortfolio : Portfolio {
      * Allocations making up this Porfolio
      */
     override val allocations: List<Allocation>
+
+    private var hashCode: Int? = null
 
     /**
      * Creates a new random, starting portfolio.DefaultPortfolio by select "portfolioSize" assets from the
@@ -58,8 +59,7 @@ class DefaultPortfolio : Portfolio {
     }
 
     private fun sumToOne(allocations: List<Allocation>): Boolean {
-        val allocationsSum: Double = allocations.map { it.amount }.sum()
-        return abs(allocationsSum - 1.0) < .0001
+        return abs(allocations.map { it.amount }.sum() - 1.0) < .0001
     }
 
     private fun uniqueAllocations(allocations: List<Allocation>): Boolean {
@@ -71,41 +71,31 @@ class DefaultPortfolio : Portfolio {
      */
     private fun startingAllocations(numOfAssets: Int): List<Allocation> {
         // get unique assets
-        val selectedIndices = TreeSet<Int>()
-        var index: Int
-        for (i in 0..size) {
-            while (true) {
-                index = Random.Default.nextInt(0, numOfAssets)
-                if (index !in selectedIndices) {
-                    selectedIndices.add(index)
-                    break
-                }
-            }
+        val selectedIndices = HashSet<Int>()
+        (0 until size).forEach { _ ->
+            var index: Int
+            do {
+                index = Random.nextInt(0, numOfAssets)
+            } while (!selectedIndices.contains(index))
         }
 
         // get random weights
-        var weights = DoubleArray(size) { _ -> Random.Default.nextDouble(0.0, 1.0)}.toList()
+        var weights = (0 until size).map { Random.nextDouble(0.0, 1.0)}
         val weightSum = weights.sum()
         weights = weights.map { it / weightSum }
 
         // pair assets and weights into a Allocations
-        val randomAllocation = ArrayList<Allocation>(size)
-        selectedIndices.forEachIndexed { idx, selected ->
-            randomAllocation.set(idx, Allocation(selected, weights.get(idx)))
-        }
-        return randomAllocation
+        return selectedIndices.mapIndexed { idx, selected -> Allocation(selected, weights[idx]) }.toList()
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other !is Portfolio) {
-            return false
-        }
-        else {
-            return this.allocations.toSet() == other.allocations.toSet()
-        }
+        return if (other !is Portfolio) false else this.allocations.toSet() == other.allocations.toSet()
     }
 
     override fun hashCode(): Int {
-        return this.allocations.hashCode()
+        if (hashCode == null) {
+            hashCode = this.allocations.hashCode()
+        }
+        return hashCode!!
     }
 }

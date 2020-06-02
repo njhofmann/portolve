@@ -25,11 +25,11 @@ class MeanVarianceMetric(assetsToReturns: List<Pair<String, List<Double>>>, priv
 
     private fun computeRisk(selectedWeights: List<Double>, selectedReturns: List<List<Double>>): Double {
         val history: MutableMap<Set<Pair<Int, Int>>, Double> = HashMap();
-        return selectedReturns.mapIndexed { idx, iList ->
-            selectedReturns.mapIndexed { jdx, jList ->
-                val idxKey = createKey(idx, jdx)
+        return selectedReturns.mapIndexed { x, xList ->
+            selectedReturns.mapIndexed { y, yList ->
+                val idxKey = createKey(x, y)
                 if (!history.containsKey(idxKey)) {
-                    history[idxKey] = selectedWeights[idx] * computeCovariance(iList, jList) * selectedWeights[jdx]
+                    history[idxKey] = selectedWeights[x] * computeCovariance(xList, yList) * selectedWeights[y]
                 }
                 history[idxKey]!!
             }.sum()

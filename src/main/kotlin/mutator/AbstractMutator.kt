@@ -11,7 +11,7 @@ abstract class AbstractMutator(mutationRate: Double, finalMutationRate: Double?,
     AbstractRateAnnealer(mutationRate, finalMutationRate, iterations) {
 
 
-    private fun toMutate(): Boolean {
+    protected fun toMutate(): Boolean {
         return Random.nextDouble(0.0, 1.0) < getPercentAtTick()
     }
 
