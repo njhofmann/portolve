@@ -4,9 +4,11 @@ import mutator.AbstractMutator
 import portfolio.Allocation
 import portfolio.DefaultPortfolio
 import portfolio.Portfolio
+import java.util.*
+import kotlin.collections.HashSet
 
 abstract class AbstractWeightMutator(mutationRate: Double, finalMutationRate: Double?, iterations: Int?,
-    maxAllocation: Double?) : WeightMutator, AbstractMutator(mutationRate, finalMutationRate, iterations) {
+    private val maxAllocation: Double?) : WeightMutator, AbstractMutator(mutationRate, finalMutationRate, iterations) {
 
     abstract fun getMutationValue(): Double
 
@@ -15,17 +17,51 @@ abstract class AbstractWeightMutator(mutationRate: Double, finalMutationRate: Do
     }
 
     private fun adjustOverflowingAllocations(portfolio: Portfolio, deltas: DoubleArray): DoubleArray {
-        deltas.mapIndexed { idx, d ->
+        if (maxAllocation == null) {
+            return deltas
+        }
 
+        var adjustedDeltas = deltas.toList()
+        val skipIndices: MutableSet<Int> = HashSet()
+
+        while (true) {
+            val skipAdjusts = LinkedList<Double>()
+            var toAdjust = false
+            adjustedDeltas = adjustedDeltas.mapIndexed { idx, d ->
+                val newAmount = deltas[idx] + portfolio.allocations[idx].amount
+                val leftover = newAmount - maxAllocation!!
+                if (leftover > 0.0) {
+                    toAdjust = true
+                    skipIndices.add(idx)
+                    skipAdjusts.add(leftover)
+                    maxAllocation - portfolio.allocations[idx].amount
+                } else {
+                    d
+                }
+            }
+
+            if (!toAdjust) {
+                return adjustedDeltas.toDoubleArray()
+            }
+
+            val adjustCount = adjustedDeltas.size - skipIndices.size
+            skipAdjusts.forEach {
+                val adjustAmount = it / adjustCount
+                adjustedDeltas = adjustedDeltas.mapIndexed { idx, d ->
+                    d + (if (skipIndices.contains(idx)) 0.0 else adjustAmount)
+                }
+            }
         }
     }
 
     override fun mutatePortfolio(portfolio: Portfolio): Portfolio {
-        val deltas = DoubleArray(portfolio.size)
-        portfolio.allocations.map { if (toMutate()) getMutationValue() else 0.0 }.forEachIndexed { idx, mutation ->
+        var deltas = DoubleArray(portfolio.size)
+        (0 until portfolio.size).map { if (toMutate()) getMutationValue() else 0.0 }.forEachIndexed { idx, mutation ->
             val deltaAdjust = mutation / (portfolio.size - 1)
             deltas.forEachIndexed { jdx, delta -> delta + (if (idx == jdx) mutation else deltaAdjust) }
         }
+
+        deltas = adjustOverflowingAllocations(portfolio, deltas)
         return DefaultPortfolio(portfolio.allocations.mapIndexed { idx, a -> mutateAllocation(a, deltas[idx]) } )
     }
 
