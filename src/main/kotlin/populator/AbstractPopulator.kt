@@ -5,9 +5,10 @@ import portfolio.DefaultPortfolio
 import portfolio.Portfolio
 import randomItemNoReplacement
 import java.util.*
+import kotlin.collections.HashSet
 import kotlin.math.ceil
 
-abstract class AbstractPopulator(assetUniverse: Int) : Populator {
+abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: Double?) : Populator {
 
     private val assetUniverseSet: Set<Int>
 
@@ -71,7 +72,7 @@ abstract class AbstractPopulator(assetUniverse: Int) : Populator {
                         newAsset = randomItemNoReplacement(unselectedAssetUniverse)
                     }
                     else -> {
-                        print("asset universe not big enough to prevent duplicate assets in children")
+                        print("WARNING: asset universe not big enough to prevent duplicate assets in children")
                         newAsset = it.asset
                     }
                 }
@@ -104,8 +105,41 @@ abstract class AbstractPopulator(assetUniverse: Int) : Populator {
     }
 
     private fun readjustAssets(assets: LinkedList<Pair<Allocation, Int>>, totalSize: Int): LinkedList<Pair<Allocation, Int>> {
+        var adjustedAssets = assets.toList()
         val reallocFactor = assets.map { it.first.amount }.sum() / (assets.size / totalSize)
-        return LinkedList(assets.map { Pair(Allocation(it.first.asset, it.first.amount * reallocFactor), it.second) })
+        val adjustedMaxAlloc = maxAllocation!! * reallocFactor
+        val fullIndices: MutableSet<Int> = HashSet()
+        while (true) {
+            var toAdjust = false
+            val leftovers = LinkedList<Double>()
+            adjustedAssets = adjustedAssets.mapIndexed { idx, pair ->
+                val adjustedAmount = reallocFactor * pair.first.amount
+                if (adjustedAmount > adjustedMaxAlloc) {
+                    leftovers.add(adjustedAmount - adjustedMaxAlloc)
+                    fullIndices.add(idx)
+                    toAdjust = true
+                    Pair(Allocation(pair.first.asset, maxAllocation), pair.second)
+                } else {
+                    pair
+                }
+            }
+
+            if (!toAdjust) {
+                return LinkedList(adjustedAssets)
+            }
+
+            val adjustCount = assets.size - fullIndices.size
+            leftovers.forEach {
+                val adjustAmount = it / adjustCount
+                adjustedAssets = adjustedAssets.mapIndexed { idx, pair ->
+                    if (fullIndices.contains(idx)) {
+                        pair
+                    } else {
+                        Pair(Allocation(pair.first.asset, pair.first.amount + adjustAmount), pair.second)
+                    }
+                }
+            }
+        }
     }
 
     /**

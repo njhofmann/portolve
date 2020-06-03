@@ -23,13 +23,12 @@ abstract class AbstractWeightMutator(mutationRate: Double, finalMutationRate: Do
 
         var adjustedDeltas = deltas.toList()
         val skipIndices: MutableSet<Int> = HashSet()
-
         while (true) {
             val skipAdjusts = LinkedList<Double>()
             var toAdjust = false
             adjustedDeltas = adjustedDeltas.mapIndexed { idx, d ->
                 val newAmount = deltas[idx] + portfolio.allocations[idx].amount
-                val leftover = newAmount - maxAllocation!!
+                val leftover = newAmount - maxAllocation
                 if (leftover > 0.0) {
                     toAdjust = true
                     skipIndices.add(idx)

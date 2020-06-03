@@ -1,8 +1,13 @@
 import portfolio.Allocation
+import kotlin.math.abs
 import kotlin.math.round
 
 fun isNotUnitValue(value: Double): Boolean {
     return !(0.0 < value && value < 1.0)
+}
+
+fun equalDoubles(a: Double, b: Double): Boolean {
+    return abs(a - b) < .00001
 }
 
 fun normalize(doubles: List<Double>): List<Double> {
