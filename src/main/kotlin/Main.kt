@@ -234,13 +234,13 @@ fun main(args: Array<String>) {
     val populationSize = getSingleInt(parsedArgs["popSize"]!!)!!
     val portfolioSize = getSingleInt(parsedArgs["portSize"]!!)!!
     val maxAllocation: MaxAllocation? = parseMaxAllocation(parsedArgs["boundary"], portfolioSize)
+    val terminationThreshold: Double? = getSingleDouble(parsedArgs["terminate"])
 
     val selector = getSelector(parsedArgs["selector"]!!, iterations)
     val populator = getPopulator(parsedArgs["populator"]!!, assetUniverse, maxAllocation)
     val fitnessMetric = getFitnessMetric(parsedArgs["fitness"]!!, assets)
     val weightMutator = getWeightMutator(parsedArgs["weightMutate"]!!, iterations)
     val assetMutator = getAssetMutator(parsedArgs["assertMutate"]!!, assetUniverse, iterations)
-    val terminationThreshold = getSingleDouble(parsedArgs["terminate"]!!)
 
     val evolver = Evolver(
         selector = selector,

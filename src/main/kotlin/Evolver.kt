@@ -16,8 +16,7 @@ class Evolver(
     private val assetMutator: AssetMutator, private val weightMutator: WeightMutator,
     private val populator: Populator, private val fitnessMetric: FitnessMetric,
     private val popSize: Int, private val portfolioSize: Int,
-    private val iterations: PositiveInt?, private val terminateThreshold: Double?
-) {
+    private val iterations: PositiveInt?, private val terminateThreshold: Double?) {
 
     private var iterCount: Int = 0
 
