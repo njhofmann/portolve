@@ -1,9 +1,10 @@
 package selector
 
+import PositiveInt
 import portfolio.Portfolio
 import roundToNearestInt
 
-class TruncateSelector(keepPercent: Double, endKeepPercent: Double? = null, iterations: Int? = null) :
+class TruncateSelector(keepPercent: Double, endKeepPercent: Double? = null, iterations: PositiveInt? = null) :
         AbstractSelector(keepPercent, endKeepPercent, iterations) {
 
     override fun prune(portfolios: List<Portfolio>, fitnessScores: List<Double>): List<Portfolio> {

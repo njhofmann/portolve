@@ -1,10 +1,11 @@
 package selector
 
+import PositiveInt
 import portfolio.Portfolio
 import roundToNearestInt
 import kotlin.random.Random
 
-class RouletteWheelSelector(keepPercent: Double, endKeepPercent: Double? = null, iterations: Int? = null) :
+class RouletteWheelSelector(keepPercent: Double, endKeepPercent: Double? = null, iterations: PositiveInt? = null) :
     AbstractSelector(keepPercent, endKeepPercent, iterations) {
 
     private fun getRandPortfolioIdx(percentiles: List<Double>): Int {

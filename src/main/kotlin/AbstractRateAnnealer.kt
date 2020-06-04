@@ -1,16 +1,15 @@
 abstract class AbstractRateAnnealer(private val startPercent: Double, private val endPercent: Double?,
-                                    private val iterations: Int?) {
+                                    private val iterations: PositiveInt?) {
 
     private var curIteration: Int = 0
 
     init {
-        if (isNotUnitValue(startPercent) || (endPercent != null && isNotUnitValue(endPercent))) {
-            throw IllegalArgumentException("start and end percents must be unit values in (0, 1)")
+        isNotUnitValue(startPercent)
+        if (endPercent != null) {
+            isNotUnitValue(endPercent)
         }
-        else if (iterations != null && iterations < 1) {
-            throw IllegalArgumentException("number of iterations must be positive")
-        }
-        else if (!((iterations == null && endPercent == null) || (iterations != null && endPercent != null))) {
+
+        if (!((iterations == null && endPercent == null) || (iterations != null && endPercent != null))) {
             throw IllegalArgumentException("iterations and end percent must both be given, or both absent")
         }
     }
@@ -19,10 +18,10 @@ abstract class AbstractRateAnnealer(private val startPercent: Double, private va
         if (iterations == null && endPercent == null) {
             return startPercent
         }
-        else if (curIteration > iterations!!) {
-            throw RuntimeException("more iterations have passed than allotted for")
+        else if (curIteration > iterations!!.num) {
+            throw IllegalStateException("more iterations have passed than allotted for")
         }
-        val diff = (endPercent!! - startPercent) * (curIteration / iterations)
+        val diff = (endPercent!! - startPercent) * (curIteration / iterations.num)
         curIteration++
         return startPercent + diff
     }

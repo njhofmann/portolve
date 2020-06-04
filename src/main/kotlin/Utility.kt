@@ -2,8 +2,10 @@ import portfolio.Allocation
 import kotlin.math.abs
 import kotlin.math.round
 
-fun isNotUnitValue(value: Double): Boolean {
-    return !(0.0 < value && value < 1.0)
+fun isNotUnitValue(value: Double) {
+    if (!(0.0 < value && value < 1.0)) {
+        throw IllegalArgumentException("param must be in range of (0, 1)")
+    }
 }
 
 fun equalDoubles(a: Double, b: Double): Boolean {

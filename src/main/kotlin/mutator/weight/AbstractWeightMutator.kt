@@ -1,5 +1,8 @@
 package mutator.weight
 
+import MaxAllocation
+import PositiveInt
+import isNotUnitValue
 import mutator.AbstractMutator
 import portfolio.Allocation
 import portfolio.DefaultPortfolio
@@ -7,8 +10,13 @@ import portfolio.Portfolio
 import java.util.*
 import kotlin.collections.HashSet
 
-abstract class AbstractWeightMutator(mutationRate: Double, finalMutationRate: Double?, iterations: Int?,
-    private val maxAllocation: Double?) : WeightMutator, AbstractMutator(mutationRate, finalMutationRate, iterations) {
+abstract class AbstractWeightMutator(protected val boundary: Double, mutationRate: Double, finalMutationRate: Double?,
+                                     iterations: PositiveInt?, private val maxAllocation: MaxAllocation?) :
+    WeightMutator, AbstractMutator(mutationRate, finalMutationRate, iterations) {
+
+    init {
+        isNotUnitValue(boundary)
+    }
 
     abstract fun getMutationValue(): Double
 
@@ -28,12 +36,12 @@ abstract class AbstractWeightMutator(mutationRate: Double, finalMutationRate: Do
             var toAdjust = false
             adjustedDeltas = adjustedDeltas.mapIndexed { idx, d ->
                 val newAmount = deltas[idx] + portfolio.allocations[idx].amount
-                val leftover = newAmount - maxAllocation
+                val leftover = newAmount - maxAllocation.num
                 if (leftover > 0.0) {
                     toAdjust = true
                     skipIndices.add(idx)
                     skipAdjusts.add(leftover)
-                    maxAllocation - portfolio.allocations[idx].amount
+                    maxAllocation.num - portfolio.allocations[idx].amount
                 } else {
                     d
                 }

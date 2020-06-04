@@ -1,12 +1,12 @@
 package selector
 
+import PositiveInt
 import portfolio.Portfolio
 import roundToNearestInt
-import kotlin.math.round
 import kotlin.random.Random
 
 class TournamentSelector(private val tournySize: Int, keepPercent: Double, endKeepPercent: Double? = null,
-                         iterations: Int? = null) : AbstractSelector(keepPercent, endKeepPercent, iterations) {
+                         iterations: PositiveInt? = null) : AbstractSelector(keepPercent, endKeepPercent, iterations) {
 
     init {
         if (tournySize < 2) {

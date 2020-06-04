@@ -2,7 +2,6 @@ import fitness.FitnessMetric
 import mutator.asset.AssetMutator
 import mutator.weight.WeightMutator
 import populator.Populator
-import portfolio.Allocation
 import portfolio.Portfolio
 import portfolio.getBest
 import portfolio.getRandomPopulation
@@ -17,7 +16,7 @@ class Evolver(
     private val assetMutator: AssetMutator, private val weightMutator: WeightMutator,
     private val populator: Populator, private val fitnessMetric: FitnessMetric,
     private val popSize: Int, private val portfolioSize: Int,
-    private val iterations: Int?, private val terminateThreshold: Double?
+    private val iterations: PositiveInt?, private val terminateThreshold: Double?
 ) {
 
     private var iterCount: Int = 0
@@ -37,7 +36,7 @@ class Evolver(
     }
 
     private fun isFinished(fitnessScores: List<Double>): Boolean {
-        if ((iterations != null && iterCount == iterations)
+        if ((iterations != null && iterCount == iterations.num)
             || (terminateThreshold != null && fitnessScores.any { it > terminateThreshold })) {
             return true
         }

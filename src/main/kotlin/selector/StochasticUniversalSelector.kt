@@ -1,10 +1,11 @@
 package selector
 
+import PositiveInt
 import portfolio.Portfolio
 import roundToNearestInt
 import kotlin.random.Random
 
-class StochasticUniversalSelector(keepPercent: Double, endKeepPercent: Double? = null, iterations: Int? = null) :
+class StochasticUniversalSelector(keepPercent: Double, endKeepPercent: Double? = null, iterations: PositiveInt? = null) :
         AbstractSelector(keepPercent, endKeepPercent, iterations) {
 
     override fun prune(portfolios: List<Portfolio>, fitnessScores: List<Double>): List<Portfolio> {

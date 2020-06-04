@@ -1,12 +1,14 @@
 package mutator.asset
 
+import PositiveInt
 import mutator.AbstractMutator
 import portfolio.Allocation
+import portfolio.DefaultPortfolio
 import portfolio.Portfolio
 import randomItemNoReplacement
 
 class RandomAssetMutator(assetUniverse: Int, mutationRate: Double, finalMutationRate: Double? = null,
-                         iterations: Int? = null) :
+                         iterations: PositiveInt? = null) :
     AssetMutator, AbstractMutator(mutationRate, finalMutationRate, iterations) {
 
     private val allAssets: Set<Int> = (0 until assetUniverse).toHashSet()
@@ -18,7 +20,7 @@ class RandomAssetMutator(assetUniverse: Int, mutationRate: Double, finalMutation
         return (allAssets - portfolio.allocations.map { it.asset }).toMutableSet()
     }
 
-    override fun mutateAllocation(allocation: Allocation): Allocation {
+    private fun mutateAllocation(allocation: Allocation): Allocation {
         return Allocation(randomItemNoReplacement(availableAssets!!), allocation.amount)
     }
 
@@ -26,7 +28,8 @@ class RandomAssetMutator(assetUniverse: Int, mutationRate: Double, finalMutation
         // TODO case where more items are mutated than available
         // update available assets with each new portfolio
         availableAssets = getAvailableAssets(portfolio)
-        return super.mutatePortfolio(portfolio)
+        val mutatedAllocs = portfolio.allocations.map { if (toMutate()) mutateAllocation(it) else it }
+        return DefaultPortfolio(mutatedAllocs)
     }
 
     override fun mutateAssets(population: List<Portfolio>): List<Portfolio> {

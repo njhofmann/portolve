@@ -24,6 +24,7 @@ fun getParser(): ArgParser {
     parser.addArg("portSize", "pf", true)
     parser.addArg("terminate", "t", false)
     parser.addArg("assetsFile", "af", true)
+    parser.addArg("boundary", "b", false)
     return parser
 }
 
@@ -44,7 +45,7 @@ fun splitListHead(args: List<String>): Pair<String, List<String>> {
     return Pair(args[0], params)
 }
 
-fun getWeightMutator(args: List<String>, iterations: Int): WeightMutator {
+fun getWeightMutator(args: List<String>, iterations: PositiveInt?): WeightMutator {
     checkNonZeroArgs(args)
     val (type, params) = splitListHead(args)
     return when (type) {
@@ -79,13 +80,13 @@ fun getWeightMutator(args: List<String>, iterations: Int): WeightMutator {
     }
 }
 
-fun getAssetMutator(args: List<String>, assetUniverse: Int, iterations: Int): AssetMutator {
+fun getAssetMutator(args: List<String>, assetUniverse: Int, iterations: PositiveInt?): AssetMutator {
     checkNonZeroArgs(args)
     val (type, params) = splitListHead(args)
     return when (type) {
         "random" -> when (params.size) {
             1 -> RandomAssetMutator(assetUniverse = assetUniverse,
-                                    mutationRate = getSingleDouble(params))
+                                    mutationRate = getSingleDouble(params)!!)
             2 -> RandomAssetMutator(assetUniverse = assetUniverse,
                                     mutationRate = toDouble(params[0]),
                                     finalMutationRate = toDouble(params[1]),
@@ -115,24 +116,26 @@ fun getFitnessMetric(args: List<String>, assetReturns: List<Pair<String, List<Do
     }
 }
 
-fun getPopulator(args: List<String>, assetUniverse: Int): Populator {
+fun getPopulator(args: List<String>, assetUniverse: Int, maxAllocation: MaxAllocation?): Populator {
     checkNonZeroArgs(args)
     val (type, params) = splitListHead(args)
     return when (type) {
         "multi-point" -> {
             checkArgsSize(params, 1)
-            MultiPointPopulator(crossoverPoints = getSingleInt(params),
-                                assetUniverse = assetUniverse)
+            MultiPointPopulator(crossoverPoints = getSingleInt(params)!!,
+                                assetUniverse = assetUniverse,
+                                maxAllocation = maxAllocation)
         }
         "shuffle" -> {
             checkArgsSize(params, 0)
-            ShufflePopulator(assetUniverse = assetUniverse)
+            ShufflePopulator(assetUniverse = assetUniverse,
+                                maxAllocation = maxAllocation)
         }
         else -> throw IllegalArgumentException("invalid weight mutator %s".format(args[0]))
     }
 }
 
-fun getSelector(args: List<String>, iterations: Int): Selector {
+fun getSelector(args: List<String>, iterations: PositiveInt?): Selector {
     checkNonZeroArgs(args)
     val (type, params) = splitListHead(args)
     return when (type) {
@@ -170,12 +173,18 @@ fun getSelector(args: List<String>, iterations: Int): Selector {
     }
 }
 
-fun getSingleInt(args: List<String>): Int {
+fun getSingleInt(args: List<String>?): Int? {
+    if (args == null) {
+        return null
+    }
     checkArgsSize(args, 1)
     return toInteger(args[0])
 }
 
-fun getSingleDouble(args: List<String>): Double {
+fun getSingleDouble(args: List<String>?): Double? {
+    if (args == null) {
+        return null
+    }
     checkArgsSize(args, 1)
     return toDouble(args[0])
 }
@@ -196,6 +205,16 @@ fun toDouble(str: String): Double {
     }
 }
 
+fun parseMaxAllocation(args: List<String>?, portfolioSize: Int): MaxAllocation? {
+    val value: Double? = getSingleDouble(args)
+    return if (value == null) null else MaxAllocation(value, portfolioSize)
+}
+
+fun parsePositiveInt(args: List<String>?): PositiveInt? {
+    val value: Int? = getSingleInt(args)
+    return if (value == null) null else PositiveInt(value)
+}
+
 fun getAssetsFile(args: List<String>): List<Pair<String, List<Double>>> {
     checkArgsSize(args, 1)
     return loadAssetReturns(args[0])
@@ -208,17 +227,19 @@ fun printSolution(solution: List<Pair<String, Double>>) {
 fun main(args: Array<String>) {
     val parsedArgs = getParser().parse(args.toList())
 
-    val assets = getAssetsFile(parsedArgs["assetsFile"]!!)
+    val assets = getAssetsFile(parsedArgs["assetsFile"] ?: error("missing assets file"))
     val assetUniverse = assets.size
 
-    val iterations = getSingleInt(parsedArgs["iterations"]!!)
+    val iterations: PositiveInt? = parsePositiveInt(parsedArgs["iterations"]!!)
+    val populationSize = getSingleInt(parsedArgs["popSize"]!!)!!
+    val portfolioSize = getSingleInt(parsedArgs["portSize"]!!)!!
+    val maxAllocation: MaxAllocation? = parseMaxAllocation(parsedArgs["boundary"], portfolioSize)
+
     val selector = getSelector(parsedArgs["selector"]!!, iterations)
-    val populator = getPopulator(parsedArgs["populator"]!!, assetUniverse)
+    val populator = getPopulator(parsedArgs["populator"]!!, assetUniverse, maxAllocation)
     val fitnessMetric = getFitnessMetric(parsedArgs["fitness"]!!, assets)
     val weightMutator = getWeightMutator(parsedArgs["weightMutate"]!!, iterations)
     val assetMutator = getAssetMutator(parsedArgs["assertMutate"]!!, assetUniverse, iterations)
-    val populationSize = getSingleInt(parsedArgs["popSize"]!!)
-    val portfolioSize = getSingleInt(parsedArgs["portSize"]!!)
     val terminationThreshold = getSingleDouble(parsedArgs["terminate"]!!)
 
     val evolver = Evolver(

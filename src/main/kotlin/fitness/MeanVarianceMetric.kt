@@ -1,6 +1,5 @@
 package fitness
 
-import org.nield.kotlinstatistics.variance
 import portfolio.Portfolio
 
 class MeanVarianceMetric(assetsToReturns: List<Pair<String, List<Double>>>, private val lambda: Double) :

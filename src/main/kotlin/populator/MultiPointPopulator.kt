@@ -1,11 +1,13 @@
 package populator
 
+import MaxAllocation
 import portfolio.Allocation
 import portfolio.Portfolio
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MultiPointPopulator(private val crossoverPoints: Int, assetUniverse: Int) : AbstractPopulator(assetUniverse) {
+class MultiPointPopulator(private val crossoverPoints: Int, assetUniverse: Int, maxAllocation: MaxAllocation?) :
+    AbstractPopulator(assetUniverse, maxAllocation) {
 
     init {
         if (crossoverPoints < 1) {

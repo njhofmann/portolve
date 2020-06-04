@@ -1,9 +1,10 @@
 package selector
 
 import AbstractRateAnnealer
+import PositiveInt
 import portfolio.Portfolio
 
-abstract class AbstractSelector(keepPercent: Double, endKeepPercent: Double?, iterations: Int?) : Selector,
+abstract class AbstractSelector(keepPercent: Double, endKeepPercent: Double?, iterations: PositiveInt?) : Selector,
     AbstractRateAnnealer(keepPercent, endKeepPercent, iterations) {
 
     protected fun sizeCheck(portfolios: List<Portfolio>, scores: List<Double>) {

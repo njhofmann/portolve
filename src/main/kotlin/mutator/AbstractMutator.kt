@@ -1,13 +1,11 @@
 package mutator
 
 import AbstractRateAnnealer
-import normAllocs
-import portfolio.Allocation
-import portfolio.DefaultPortfolio
+import PositiveInt
 import portfolio.Portfolio
 import kotlin.random.Random
 
-abstract class AbstractMutator(mutationRate: Double, finalMutationRate: Double?, iterations: Int?):
+abstract class AbstractMutator(mutationRate: Double, finalMutationRate: Double?, iterations: PositiveInt?):
     AbstractRateAnnealer(mutationRate, finalMutationRate, iterations) {
 
 
@@ -15,12 +13,7 @@ abstract class AbstractMutator(mutationRate: Double, finalMutationRate: Double?,
         return Random.nextDouble(0.0, 1.0) < getPercentAtTick()
     }
 
-    protected abstract fun mutateAllocation(allocation: Allocation): Allocation
-
-    protected open fun mutatePortfolio(portfolio: Portfolio): Portfolio {
-        val mutatedAllocs = portfolio.allocations.map { if (toMutate()) mutateAllocation(it) else it }
-        return DefaultPortfolio(normAllocs(mutatedAllocs))
-    }
+    protected abstract fun mutatePortfolio(portfolio: Portfolio): Portfolio
 
     protected fun mutatePortfolios(population: List<Portfolio>): List<Portfolio> {
         return population.map { mutatePortfolio(it) }

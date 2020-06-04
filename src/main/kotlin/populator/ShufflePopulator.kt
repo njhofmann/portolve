@@ -1,10 +1,12 @@
 package populator
 
+import MaxAllocation
 import portfolio.Allocation
 import portfolio.Portfolio
 import kotlin.random.Random
 
-class ShufflePopulator(assetUniverse: Int) : AbstractPopulator(assetUniverse) {
+class ShufflePopulator(assetUniverse: Int, maxAllocation: MaxAllocation?) :
+    AbstractPopulator(assetUniverse, maxAllocation) {
 
     override fun createChild(a: Portfolio, b: Portfolio): Pair<Portfolio, Portfolio> {
         checkSameSize(a, b)

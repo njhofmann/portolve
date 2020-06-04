@@ -1,7 +1,6 @@
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 fun computeReturns(prices: List<String>): List<Double> {

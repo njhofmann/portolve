@@ -1,5 +1,6 @@
 package populator
 
+import MaxAllocation
 import portfolio.Allocation
 import portfolio.DefaultPortfolio
 import portfolio.Portfolio
@@ -8,7 +9,7 @@ import java.util.*
 import kotlin.collections.HashSet
 import kotlin.math.ceil
 
-abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: Double?) : Populator {
+abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: MaxAllocation?) : Populator {
 
     private val assetUniverseSet: Set<Int>
 
@@ -105,9 +106,12 @@ abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: 
     }
 
     private fun readjustAssets(assets: LinkedList<Pair<Allocation, Int>>, totalSize: Int): LinkedList<Pair<Allocation, Int>> {
+        if (maxAllocation == null) {
+            return assets
+        }
         var adjustedAssets = assets.toList()
         val reallocFactor = assets.map { it.first.amount }.sum() / (assets.size / totalSize)
-        val adjustedMaxAlloc = maxAllocation!! * reallocFactor
+        val adjustedMaxAlloc = maxAllocation.value * reallocFactor
         val fullIndices: MutableSet<Int> = HashSet()
         while (true) {
             var toAdjust = false
@@ -118,7 +122,7 @@ abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: 
                     leftovers.add(adjustedAmount - adjustedMaxAlloc)
                     fullIndices.add(idx)
                     toAdjust = true
-                    Pair(Allocation(pair.first.asset, maxAllocation), pair.second)
+                    Pair(Allocation(pair.first.asset, maxAllocation.value), pair.second)
                 } else {
                     pair
                 }
