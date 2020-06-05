@@ -14,6 +14,7 @@ abstract class AbstractSelector(keepPercent: Double, endKeepPercent: Double?, it
     }
 
     private fun cumulativeSum(scores: List<Double>): List<Double> {
+        // # TODO fix me
         return scores.mapIndexed { idx, dbl -> if (idx == 0) dbl else dbl + scores[idx - 1] }
     }
 

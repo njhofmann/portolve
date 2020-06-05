@@ -9,13 +9,14 @@ abstract class AbstractMutator(mutationRate: Double, finalMutationRate: Double?,
     AbstractRateAnnealer(mutationRate, finalMutationRate, iterations) {
 
 
-    protected fun toMutate(): Boolean {
-        return Random.nextDouble(0.0, 1.0) < getPercentAtTick()
+    protected fun toMutate(mutateThreshold: Double): Boolean {
+        return Random.nextDouble(0.0, 1.0) < mutateThreshold
     }
 
-    protected abstract fun mutatePortfolio(portfolio: Portfolio): Portfolio
+    protected abstract fun mutatePortfolio(portfolio: Portfolio, mutateThreshold: Double): Portfolio
 
     protected fun mutatePortfolios(population: List<Portfolio>): List<Portfolio> {
-        return population.map { mutatePortfolio(it) }
+        val mutateThreshold = getPercentAtTick()
+        return population.map { mutatePortfolio(it, mutateThreshold) }
     }
 }

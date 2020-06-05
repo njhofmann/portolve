@@ -19,12 +19,12 @@ fun getParser(): ArgParser {
     parser.addArg("assetMutate", "am", true)
     parser.addArg("selector", "s", true)
     parser.addArg("populator", "p", true)
-    parser.addArg("iterations", "m", true)
+    parser.addArg("iterations", "i", true)
     parser.addArg("popSize", "pp", true)
     parser.addArg("portSize", "pf", true)
-    parser.addArg("terminate", "t", false)
     parser.addArg("assetsFile", "af", true)
     parser.addArg("boundary", "b", false)
+    parser.addArg("terminate", "t", false)
     return parser
 }
 
@@ -103,12 +103,12 @@ fun getFitnessMetric(args: List<String>, assetReturns: List<Pair<String, List<Do
     return when (type) {
         "sharpe" -> {
             // TODO file name
-            checkArgsSize(params, 1)
+            checkArgsSize(params, 0)
             SharpeMetric(assetsToReturns = assetReturns,
-                            avgRateFreeReturn = toDouble(params[0]))
+                            avgRateFreeReturn = 0.0)
         }
         "mean-var" -> {
-            checkArgsSize(params, 2)
+            checkArgsSize(params, 1)
             MeanVarianceMetric(assetsToReturns = assetReturns,
                                 lambda = toDouble(params[0]))
         }
@@ -221,13 +221,23 @@ fun getAssetsFile(args: List<String>): List<Pair<String, List<Double>>> {
 }
 
 fun printSolution(solution: List<Pair<String, Double>>) {
-    solution.forEach { print("Asset: %s, Weight: %d\n".format(it.first, it.second)) }
+    print("\nBest Solution:\n")
+    solution.forEach { print("Asset: %s, Weight: %f\n".format(it.first, it.second)) }
+}
+
+fun configToParser(): Map<String, List<String>> {
+    // TODO config file
+    return HashMap()
 }
 
 fun main(args: Array<String>) {
-    val parsedArgs = getParser().parse(args.toList())
+    val parsedArgs = when (args.size) {
+        0 -> throw IllegalArgumentException("expected config file or args")
+        1 -> configToParser()
+        else -> getParser().parse(args.toList())
+    }
 
-    val assets = getAssetsFile(parsedArgs["assetsFile"] ?: error("missing assets file"))
+    val assets = getAssetsFile(parsedArgs["assetsFile"]!!)
     val assetUniverse = assets.size
 
     val iterations: PositiveInt? = parsePositiveInt(parsedArgs["iterations"]!!)
@@ -240,7 +250,7 @@ fun main(args: Array<String>) {
     val populator = getPopulator(parsedArgs["populator"]!!, assetUniverse, maxAllocation)
     val fitnessMetric = getFitnessMetric(parsedArgs["fitness"]!!, assets)
     val weightMutator = getWeightMutator(parsedArgs["weightMutate"]!!, iterations)
-    val assetMutator = getAssetMutator(parsedArgs["assertMutate"]!!, assetUniverse, iterations)
+    val assetMutator = getAssetMutator(parsedArgs["assetMutate"]!!, assetUniverse, iterations)
 
     val evolver = Evolver(
         selector = selector,
@@ -254,6 +264,7 @@ fun main(args: Array<String>) {
         terminateThreshold = terminationThreshold,
         assets = assets.map { it.first }
     )
+
     val solution: List<Pair<String, Double>> = evolver.findSolution()
     printSolution(solution)
 }

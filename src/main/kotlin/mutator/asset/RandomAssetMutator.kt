@@ -24,11 +24,11 @@ class RandomAssetMutator(assetUniverse: Int, mutationRate: Double, finalMutation
         return Allocation(randomItemNoReplacement(availableAssets!!), allocation.amount)
     }
 
-    override fun mutatePortfolio(portfolio: Portfolio): Portfolio {
+    override fun mutatePortfolio(portfolio: Portfolio, mutateTheshold: Double): Portfolio {
         // TODO case where more items are mutated than available
         // update available assets with each new portfolio
         availableAssets = getAvailableAssets(portfolio)
-        val mutatedAllocs = portfolio.allocations.map { if (toMutate()) mutateAllocation(it) else it }
+        val mutatedAllocs = portfolio.allocations.map { if (toMutate(mutateTheshold)) mutateAllocation(it) else it }
         return DefaultPortfolio(mutatedAllocs)
     }
 

@@ -12,8 +12,7 @@ class TruncateSelector(keepPercent: Double, endKeepPercent: Double? = null, iter
         val truncAmount = roundToNearestInt(getPercentAtTick() * fitnessScores.size)
         val sortedIndices = (portfolios.indices).map { Pair(it, fitnessScores[it]) }
             .sortedWith(compareBy({ it.second }, { it.first })).map { it.first }
-        val truncIndices = sortedIndices.subList(
-                sortedIndices.size - truncAmount, sortedIndices.size)
+        val truncIndices = sortedIndices.subList(sortedIndices.size - truncAmount, sortedIndices.size)
         return truncIndices.map { portfolios[it] }
     }
 }

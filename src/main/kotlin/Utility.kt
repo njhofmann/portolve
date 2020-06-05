@@ -3,7 +3,7 @@ import kotlin.math.abs
 import kotlin.math.round
 
 fun isNotUnitValue(value: Double) {
-    if (!(0.0 < value && value < 1.0)) {
+    if (!(value in 0.0..1.0)) {
         throw IllegalArgumentException("param must be in range of (0, 1)")
     }
 }

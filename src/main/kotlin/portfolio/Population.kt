@@ -3,7 +3,7 @@ package portfolio
 import fitness.FitnessMetric
 
 fun getRandomPopulation(assetUniverse: Int, popSize: Int, portfolioSize: Int): List<Portfolio> {
-    return (0..popSize).map { DefaultPortfolio(assetUniverse, portfolioSize) }
+    return (0 until popSize).map { DefaultPortfolio(assetUniverse, portfolioSize) }
 }
 
 fun getBest(population: List<Portfolio>, fitnessMetric: FitnessMetric): Portfolio {

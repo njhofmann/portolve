@@ -111,7 +111,7 @@ abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: 
         }
         var adjustedAssets = assets.toList()
         val reallocFactor = assets.map { it.first.amount }.sum() / (assets.size / totalSize)
-        val adjustedMaxAlloc = maxAllocation.value * reallocFactor
+        val adjustedMaxAlloc = maxAllocation.num * reallocFactor
         val fullIndices: MutableSet<Int> = HashSet()
         while (true) {
             var toAdjust = false
@@ -122,7 +122,7 @@ abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: 
                     leftovers.add(adjustedAmount - adjustedMaxAlloc)
                     fullIndices.add(idx)
                     toAdjust = true
-                    Pair(Allocation(pair.first.asset, maxAllocation.value), pair.second)
+                    Pair(Allocation(pair.first.asset, maxAllocation.num), pair.second)
                 } else {
                     pair
                 }

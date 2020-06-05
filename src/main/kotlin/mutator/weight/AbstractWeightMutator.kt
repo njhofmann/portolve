@@ -61,11 +61,12 @@ abstract class AbstractWeightMutator(protected val boundary: Double, mutationRat
         }
     }
 
-    override fun mutatePortfolio(portfolio: Portfolio): Portfolio {
+    override fun mutatePortfolio(portfolio: Portfolio, mutationTheshold: Double): Portfolio {
         var deltas = DoubleArray(portfolio.size)
-        (0 until portfolio.size).map { if (toMutate()) getMutationValue() else 0.0 }.forEachIndexed { idx, mutation ->
-            val deltaAdjust = mutation / (portfolio.size - 1)
-            deltas.forEachIndexed { jdx, delta -> delta + (if (idx == jdx) mutation else deltaAdjust) }
+        (0 until portfolio.size).map { if (toMutate(mutationTheshold)) getMutationValue() else 0.0 }
+            .forEachIndexed { idx, mutation ->
+                val deltaAdjust = mutation / (portfolio.size - 1)
+                deltas.forEachIndexed { jdx, delta -> delta + (if (idx == jdx) mutation else deltaAdjust) }
         }
 
         deltas = adjustOverflowingAllocations(portfolio, deltas)

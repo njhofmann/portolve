@@ -46,15 +46,16 @@ class Evolver(
     fun findSolution(): List<Pair<String, Double>> {
         var population: List<Portfolio> = getRandomPopulation(assets.size, popSize, portfolioSize)
         while (true) {
-            val scores = this.fitnessMetric.evaluate(population)
+            val scores = fitnessMetric.evaluate(population)
+            print("Generation %d, Score: %f\n".format(iterCount, scores.max()))
             if (isFinished(scores)) {
                 break
             }
-            population = this.selector.prune(population, scores)
-            population = this.assetMutator.mutateAssets(population)
-            population = this.weightMutator.mutateWeights(population)
-            population = this.populator.populate(population, popSize)
+            population = selector.prune(population, scores)
+            population = assetMutator.mutateAssets(population)
+            population = weightMutator.mutateWeights(population)
+            population = populator.populate(population, popSize)
         }
-        return this.namePortfolio(getBest(population, this.fitnessMetric))
+        return namePortfolio(getBest(population, fitnessMetric))
     }
 }

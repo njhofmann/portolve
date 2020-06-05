@@ -70,12 +70,12 @@ class DefaultPortfolio : Portfolio {
      */
     private fun startingAllocations(numOfAssets: Int): List<Allocation> {
         // get unique assets
-        val selectedIndices = HashSet<Int>()
-        (0 until size).forEach { _ ->
-            var index: Int
-            do {
-                index = Random.nextInt(0, numOfAssets)
-            } while (!selectedIndices.contains(index))
+        val selectedIndices: MutableSet<Int> = HashSet()
+        while (selectedIndices.size < size) {
+            val index = Random.nextInt(0, numOfAssets)
+            if (!selectedIndices.contains(index)) {
+                selectedIndices.add(index)
+            }
         }
 
         // get random weights

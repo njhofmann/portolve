@@ -3,7 +3,7 @@ package fitness
 import org.nield.kotlinstatistics.standardDeviation
 import portfolio.Portfolio
 
-class SharpeMetric(assetsToReturns: List<Pair<String, List<Double>>>, private val avgRateFreeReturn: Double) :
+class SharpeMetric(assetsToReturns: List<Pair<String, List<Double>>>, private val avgRateFreeReturn: Double = 0.0) :
     AbstractFitnessMetric(assetsToReturns) {
 
     override fun score(portfolio: Portfolio): Double {

@@ -21,8 +21,8 @@ abstract class AbstractRateAnnealer(private val startPercent: Double, private va
         else if (curIteration > iterations!!.num) {
             throw IllegalStateException("more iterations have passed than allotted for")
         }
-        val diff = (endPercent!! - startPercent) * (curIteration / iterations.num)
-        curIteration++
+        val diff = (endPercent!! - startPercent) * (curIteration * 1.0 / iterations.num)
+        curIteration += 1
         return startPercent + diff
     }
 }
