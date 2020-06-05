@@ -1,4 +1,5 @@
 import portfolio.Allocation
+import java.util.*
 import kotlin.math.abs
 import kotlin.math.round
 
@@ -33,4 +34,10 @@ fun <T> randomItemNoReplacement(items: MutableSet<T>): T {
 fun normAllocs(allocations: List<Allocation>): List<Allocation> {
     val normWeights = normalize(allocations.map { it.amount })
     return allocations.mapIndexed { idx, alloc -> Allocation(alloc.asset, normWeights[idx]) }
+}
+
+fun <T> unzipPairs(pairs: List<Pair<T, T>>): LinkedList<T> {
+    val lists: LinkedList<T> = LinkedList()
+    pairs.forEach { lists.add(it.first); lists.add(it.second) }
+    return lists
 }

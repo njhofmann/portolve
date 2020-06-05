@@ -5,8 +5,10 @@ import portfolio.Allocation
 import portfolio.DefaultPortfolio
 import portfolio.Portfolio
 import randomItemNoReplacement
+import unzipPairs
 import java.util.*
 import kotlin.collections.HashSet
+import kotlin.math.abs
 import kotlin.math.ceil
 
 abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: MaxAllocation?) : Populator {
@@ -33,19 +35,13 @@ abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: 
     private fun getUniqueParents(portfolios: List<Portfolio>): Pair<Portfolio, Portfolio> {
         val a = portfolios.random()
         var b = portfolios.random()
-        while (a != b) {
+        while (a == b) {
             b = portfolios.random()
         }
         return Pair(a, b)
     }
 
     abstract fun createChild(a: Portfolio, b: Portfolio): Pair<Portfolio, Portfolio>
-
-    private fun <T> unzipPairs(pairs: List<Pair<T, T>>): LinkedList<T> {
-        val lists: LinkedList<T> = LinkedList()
-        pairs.forEach { lists.add(it.first); lists.add(it.second) }
-        return lists
-    }
 
     protected fun checkSameSize(a: Portfolio, b: Portfolio) {
         if (a.size != b.size) {
@@ -58,7 +54,7 @@ abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: 
         if (assets.size == childAssets.size) {
             return assets
         }
-        val dupAssets = (assets.map { it.asset } - childAssets).toMutableSet()
+        val dupAssets = assets.map { it.asset }.filter { !childAssets.remove(it) }.toMutableSet()
         val unselectedAssetUniverse = (assetUniverseSet - childAssets).toMutableSet()
         return assets.map {
             if (dupAssets.contains(it.asset)) {
@@ -100,17 +96,21 @@ abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: 
     }
 
     private fun mergeAdjustedAssets(a: LinkedList<Pair<Allocation, Int>>, b: LinkedList<Pair<Allocation, Int>>): List<Allocation> {
-        val merged = (0 until (a.size + b.size)).map { (if (a.peekFirst().second == it) a else b).pop().first }
-        assert(a.isEmpty() && b.isEmpty())  // TODO does this work?
-        return merged
+        return (0 until (a.size + b.size)).map {
+            (if (a.isNotEmpty() && a.peekFirst().second == it) a else b).pop().first
+        }
     }
 
     private fun readjustAssets(assets: LinkedList<Pair<Allocation, Int>>, totalSize: Int): LinkedList<Pair<Allocation, Int>> {
+
+        // TODO fix reallocation
+        val reallocFactor = (assets.size * 1.0 / totalSize) / assets.map { it.first.amount }.sum()
+        var adjustedAssets = assets.map { Pair(Allocation(it.first.asset, it.first.amount * reallocFactor), it.second) }
+
         if (maxAllocation == null) {
-            return assets
+            return LinkedList(adjustedAssets)
         }
-        var adjustedAssets = assets.toList()
-        val reallocFactor = assets.map { it.first.amount }.sum() / (assets.size / totalSize)
+
         val adjustedMaxAlloc = maxAllocation.num * reallocFactor
         val fullIndices: MutableSet<Int> = HashSet()
         while (true) {
@@ -173,7 +173,7 @@ abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: 
 
         checks?.forEach { it(population) }
 
-        val breedCount = ceil((population.size - targetSize) / 2.0).toInt()
+        val breedCount = ceil(abs((population.size - targetSize)) / 2.0).toInt()
         val children: LinkedList<Portfolio> = unzipPairs((0 until breedCount).map {
             val parents = getUniqueParents(population)
             createChild(parents.first, parents.second)

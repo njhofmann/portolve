@@ -19,7 +19,7 @@ fun getParser(): ArgParser {
     parser.addArg("assetMutate", "am", true)
     parser.addArg("selector", "s", true)
     parser.addArg("populator", "p", true)
-    parser.addArg("iterations", "i", true)
+    parser.addArg("iterations", "i", false)
     parser.addArg("popSize", "pp", true)
     parser.addArg("portSize", "pf", true)
     parser.addArg("assetsFile", "af", true)
@@ -240,7 +240,7 @@ fun main(args: Array<String>) {
     val assets = getAssetsFile(parsedArgs["assetsFile"]!!)
     val assetUniverse = assets.size
 
-    val iterations: PositiveInt? = parsePositiveInt(parsedArgs["iterations"]!!)
+    val iterations: PositiveInt? = parsePositiveInt(parsedArgs["iterations"])
     val populationSize = getSingleInt(parsedArgs["popSize"]!!)!!
     val portfolioSize = getSingleInt(parsedArgs["portSize"]!!)!!
     val maxAllocation: MaxAllocation? = parseMaxAllocation(parsedArgs["boundary"], portfolioSize)

@@ -6,21 +6,13 @@
     1. continous metrics
 1. boundary enforcement / allocation cap
     1. double check
-1. wrap params into helper objects
-    1. boundary
-        1. boundary * popsize >= 1
-    1. iterations
-1. get data sources
-    1. crypto currencies
-    1. s&p 500
-1. argparser 
-    1. null option for optional parameters
-    1. add helper
-1. how to do checks?
-1. make portfolio wrapper around allocations
+1. fix abstract populator
+1. scale negative scores for selection
+1. fix stoch selector
+1. config file
+1. make portfolio a better allocations wrapper
 1. documentation catch up
 1. refactoring
-1. config file
 
 ## Stuff
 1. Separate function objects for individual parts of algorithm
@@ -48,10 +40,13 @@
     1. asset performance = weighted average of all returns
 
 ### Write Up Topics
-- Multi objective optimization
-- Evolutionary algorithms
+- project motivation
+- project aims
 - Modern portfolio optimization
 - Mean-variance model
+- Multi objective optimization
+    - discuss pareto optimum
+- Evolutionary algorithms
 - Types of constraints
-- Hard vs soft constraints
-- discuss pareto optimum
+    - Hard vs soft constraints
+- general approach taken to problem

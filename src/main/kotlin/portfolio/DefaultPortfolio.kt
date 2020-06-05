@@ -1,5 +1,6 @@
 package portfolio
 
+import equalDoubles
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -43,11 +44,11 @@ class DefaultPortfolio : Portfolio {
      * Creates a new Portfolio from an existing list of Allocations
      */
     constructor(allocations: List<Allocation>) {
-        // TODO constraint checks
         if (allocations.isEmpty()) {
             throw IllegalArgumentException("must have at least one asset in this Portfolio")
         }
         else if (!sumToOne(allocations)) {
+            print(allocations.map { it.amount}.sum())
             throw IllegalArgumentException("Allocation weights in a Portfolio must sum to 1")
         }
         else if (!uniqueAllocations(allocations)) {
@@ -58,7 +59,7 @@ class DefaultPortfolio : Portfolio {
     }
 
     private fun sumToOne(allocations: List<Allocation>): Boolean {
-        return abs(allocations.map { it.amount }.sum() - 1.0) < .0001
+        return equalDoubles(allocations.map { it.amount }.sum(), 1.0)
     }
 
     private fun uniqueAllocations(allocations: List<Allocation>): Boolean {

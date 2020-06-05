@@ -47,7 +47,7 @@ class Evolver(
         var population: List<Portfolio> = getRandomPopulation(assets.size, popSize, portfolioSize)
         while (true) {
             val scores = fitnessMetric.evaluate(population)
-            print("Generation %d, Score: %f\n".format(iterCount, scores.max()))
+            print("Generation %d, Score: %f, Avg Score: %f\n".format(iterCount, scores.max(), scores.average()))
             if (isFinished(scores)) {
                 break
             }

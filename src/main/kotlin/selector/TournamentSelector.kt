@@ -16,9 +16,6 @@ class TournamentSelector(private val tournySize: Int, keepPercent: Double, endKe
 
     override fun prune(portfolios: List<Portfolio>, fitnessScores: List<Double>): List<Portfolio> {
         sizeCheck(portfolios, fitnessScores)
-        if (portfolios.size > tournySize) {
-            throw IllegalArgumentException("portfolio size is greater than tournament size")
-        }
         val newPopSize = roundToNearestInt(getPercentAtTick() * portfolios.size)
         return (0 until newPopSize).map {
             var bestIdx: Int = -1
