@@ -3,6 +3,8 @@ package selector
 import AbstractRateAnnealer
 import PositiveInt
 import portfolio.Portfolio
+import kotlin.math.abs
+import kotlin.math.min
 
 abstract class AbstractSelector(keepPercent: Double, endKeepPercent: Double?, iterations: PositiveInt?) : Selector,
     AbstractRateAnnealer(keepPercent, endKeepPercent, iterations) {
@@ -14,16 +16,20 @@ abstract class AbstractSelector(keepPercent: Double, endKeepPercent: Double?, it
     }
 
     private fun cumulativeSum(scores: List<Double>): List<Double> {
-        // # TODO fix me
-        return scores.mapIndexed { idx, dbl -> if (idx == 0) dbl else dbl + scores[idx - 1] }
-    }
-
-    private fun normalize(doubles: List<Double>): List<Double> {
-        val sum: Double = doubles.sum()
-        return doubles.map { it / sum }
+        var cumSum = 0.0
+        return scores.map { cumSum += it; cumSum }
     }
 
     protected fun normalizedPercentiles(scores: List<Double>): List<Double> {
-        return normalize(cumulativeSum(scores))
+        val cumSum = cumulativeSum(scaleScoresToPositive(scores))
+        return cumSum.map { it / cumSum[cumSum.size - 1]}
+    }
+
+    private fun scaleScoresToPositive(scores: List<Double>): List<Double> {
+        if (scores.all { it > 0 }) {
+            return scores
+        }
+        val minScore: Double = scores.min()!!
+        return scores.map { it + abs(minScore) }
     }
 }

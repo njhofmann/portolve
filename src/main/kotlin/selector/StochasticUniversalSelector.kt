@@ -3,6 +3,7 @@ package selector
 import PositiveInt
 import portfolio.Portfolio
 import roundToNearestInt
+import java.util.*
 import kotlin.random.Random
 
 class StochasticUniversalSelector(keepPercent: Double, endKeepPercent: Double? = null, iterations: PositiveInt? = null) :
@@ -11,19 +12,19 @@ class StochasticUniversalSelector(keepPercent: Double, endKeepPercent: Double? =
     override fun prune(portfolios: List<Portfolio>, fitnessScores: List<Double>): List<Portfolio> {
         sizeCheck(portfolios, fitnessScores)
         val numToSelect: Int = roundToNearestInt(getPercentAtTick() * fitnessScores.size)
-        val pointerDist: Double = fitnessScores.sum() / numToSelect // total fitness / # offspring to keep
-        var threshold: Double = Random.nextDouble(0.0, pointerDist)
+        val pointerDist: Double = 1.0 / numToSelect // total fitness / # offspring to keep
+        val threshold: Double = Random.nextDouble(0.0, pointerDist)
         val pointers = (0 until numToSelect).map { threshold + (it * pointerDist) }
         val percentiles: List<Double> = normalizedPercentiles(fitnessScores)
-        // TODO fix me
+
         var idx = 0
-        return (0 until numToSelect).map {
-            threshold += if (it == 0) 0.0 else pointerDist
-            while (threshold < percentiles[idx]) {
+        val selectedPortfolios = LinkedList<Portfolio>()
+        pointers.forEach {
+            while (percentiles[idx] < it) {
                 idx++
             }
-            portfolios[idx]
+            selectedPortfolios.add(portfolios[idx])
         }
+        return selectedPortfolios
     }
-
 }

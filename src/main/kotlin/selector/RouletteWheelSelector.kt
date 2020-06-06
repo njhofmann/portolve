@@ -9,7 +9,6 @@ class RouletteWheelSelector(keepPercent: Double, endKeepPercent: Double? = null,
     AbstractSelector(keepPercent, endKeepPercent, iterations) {
 
     private fun getRandPortfolioIdx(percentiles: List<Double>): Int {
-        // with replacement
         var cumPercentage = 0.0
         val threshold: Double = Random.nextDouble(0.0, 1.0)
         percentiles.forEachIndexed { idx, percent ->
@@ -24,6 +23,6 @@ class RouletteWheelSelector(keepPercent: Double, endKeepPercent: Double? = null,
     override fun prune(portfolios: List<Portfolio>, fitnessScores: List<Double>): List<Portfolio> {
         val cumNormScores = normalizedPercentiles(fitnessScores)
         val numToKeep: Int = roundToNearestInt(getPercentAtTick() * portfolios.size)
-        return (0..numToKeep).map { portfolios[getRandPortfolioIdx(cumNormScores)] }
+        return (0 until numToKeep).map { portfolios[getRandPortfolioIdx(cumNormScores)] }
     }
 }
