@@ -22,8 +22,8 @@ fun loadAssetReturns(fileName: String): List<Pair<String, List<Double>>> {
             assetsToPriceLists[key]?.add(value)
         }
     }
-    if (assetsToPriceLists.containsKey("date")) {
-        assetsToPriceLists.remove("date")
+    if (assetsToPriceLists.containsKey("dates")) {
+        assetsToPriceLists.remove("dates")
     }
     return assetsToPriceLists.map { Pair(it.key, computeReturns(it.value)) }
 }

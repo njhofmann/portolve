@@ -11,6 +11,7 @@ import populator.MultiPointPopulator
 import populator.Populator
 import populator.ShufflePopulator
 import selector.*
+import java.io.File
 
 fun getParser(): ArgParser {
     val parser = ArgParser()
@@ -226,15 +227,20 @@ fun printSolution(solution: List<Pair<String, Double>>) {
 }
 
 fun configToParser(): Map<String, List<String>> {
-    // TODO config file
-    return HashMap()
+    val configLines = File("config").readLines().filter { it.isNotBlank() && !it.startsWith("#") }
+    return configLines.associate {
+        val tokens = it.split(" ").toList()
+        val key = tokens.subList(0, 1)[0]
+        val params = if (tokens.size <= 2) ArrayList<String>() else tokens.subList(2, tokens.size)
+        Pair(key, params)
+    }
 }
 
 fun main(args: Array<String>) {
+    val parser = getParser()
     val parsedArgs = when (args.size) {
-        0 -> throw IllegalArgumentException("expected config file or args")
-        1 -> configToParser()
-        else -> getParser().parse(args.toList())
+        0 -> parser.parse(configToParser())
+        else -> parser.parse(args.toList())
     }
 
     val assets = getAssetsFile(parsedArgs["assetsFile"]!!)

@@ -1,0 +1,15 @@
+# form of 'key = values', values can be left empty if needed
+# comments being with hashtag
+fitness = sharpe
+weightMutate = gaussian .1 .1
+assetMutate = random .1
+selector = tourny 2 .75
+populator = multi-point 2
+popSize = 20
+portSize = 8
+assetsFile = data/prices.csv
+
+# optional
+iterations = 100
+boundary = 
+terminate = 

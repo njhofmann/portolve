@@ -63,19 +63,20 @@ class ArgParser {
         return small.all { large.contains(it)  }
     }
 
-    fun parse(arguments: List<String>): Map<String, List<String>> {
-        // TODO check all required arguments are required
-        // TODO check no duplicate arguments
+    fun parse(arguments: Map<String, List<String>>): Map<String, List<String>> {
         val requiredArgs: Set<String> = this.getRequiredArgs()
-        val argNamesToParams: Map<String, List<String>> = findParams(arguments)
-        if (!isSubset(requiredArgs, argNamesToParams.keys)) {
-            throw IllegalArgumentException("missing required args %s".format(requiredArgs - argNamesToParams.keys))
+        if (!isSubset(requiredArgs, arguments.keys)) {
+            throw IllegalArgumentException("missing required args %s".format(requiredArgs - arguments.keys))
         }
 
-        val uniqueArgs = argNamesToParams.keys.distinct()
-        if (argNamesToParams.size > uniqueArgs.size) {
-            throw IllegalArgumentException("have duplicate arguments %s".format(argNamesToParams - uniqueArgs))
+        val uniqueArgs = arguments.keys.distinct()
+        if (arguments.size > uniqueArgs.size) {
+            throw IllegalArgumentException("have duplicate arguments %s".format(arguments - uniqueArgs))
         }
-        return argNamesToParams
+        return arguments
+    }
+
+    fun parse(arguments: List<String>): Map<String, List<String>> {
+        return parse(findParams(arguments))
     }
 }

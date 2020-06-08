@@ -36,3 +36,7 @@
     - Max and min % an asset can of portfolio (floor & ceiling)
     - Max number of assets (cardinality)
 - general approach taken to problem
+
+## Sources
+1. http://www.geatbx.com/docu/algindex-01.html#TopOfPage
+1. https://cstheory.stackexchange.com/questions/14758/tournament-selection-in-genetic-algorithms

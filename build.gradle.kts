@@ -27,8 +27,3 @@ tasks.test {
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions.jvmTarget = "1.8"
 }
-
-//sourceSets {
-//    main {
-//        java.srcDirs("src")
-//    }
