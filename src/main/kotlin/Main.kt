@@ -12,7 +12,13 @@ import populator.Populator
 import populator.ShufflePopulator
 import selector.*
 import java.io.File
+import java.util.*
+import kotlin.collections.ArrayList
 
+/**
+ * Creates the ArgParser with all the necessary parameters for this project
+ * @return: formatted ArgParser
+ */
 fun getParser(): ArgParser {
     val parser = ArgParser()
     parser.addArg("fitness", "f", true)
@@ -106,7 +112,8 @@ fun getFitnessMetric(args: List<String>, assetReturns: List<Pair<String, List<Do
             // TODO file name
             checkArgsSize(params, 0)
             SharpeMetric(assetsToReturns = assetReturns,
-                            avgRateFreeReturn = 0.0)
+                            avgRateFreeReturn = LinkedList<Double>()
+            )
         }
         "mean-var" -> {
             checkArgsSize(params, 1)
