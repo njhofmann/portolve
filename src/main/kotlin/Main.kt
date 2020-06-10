@@ -12,6 +12,10 @@ import populator.Populator
 import populator.ShufflePopulator
 import selector.*
 
+/**
+ * Creates the ArgParser with all the necessary parameters for this project
+ * @return: formatted ArgParser
+ */
 fun getParser(): ArgParser {
     val parser = ArgParser()
     parser.addArg("fitness", "f", true)

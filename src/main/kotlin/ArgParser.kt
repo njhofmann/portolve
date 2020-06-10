@@ -1,12 +1,24 @@
 /**
- * Simple argument parser that defines arguments by a name and a required flag
+ * Simple argument parser that defines arguments via a name, an abbreviation, and a required flag
  */
 class ArgParser {
 
+    /**
+     * An argument comprised of a name, an abbreviation, and required flag
+     */
     private data class Arg(val name: String, val abbrev: String, val required: Boolean)
 
+    /**
+     * Args that have been added to this Parser
+     */
     private val args: MutableList<Arg> = ArrayList()
 
+    /**
+     * Adds an argument to this parser, name and abbreviation must not match an previously added named or abbreviation
+     * @param name: name of the argument
+     * @param abbrev: abbreviation of the argument
+     * @param required: if the argument should be required
+     */
     fun addArg(name: String, abbrev: String, required: Boolean) {
         if (name.isBlank() || abbrev.isBlank()) {
             throw IllegalArgumentException("can't have empty or blank arguments")
@@ -16,10 +28,21 @@ class ArgParser {
         args.add(Arg(name, abbrev, required))
     }
 
+    /**
+     * Retrieves the set of required argument names registered with this parser so far
+     * @return: parser's required argument names
+     */
     private fun getRequiredArgs(): Set<String> {
         return args.filter { it.required }.map { it.name }.toSet()
     }
 
+    /**
+     * Returns if the given string is a valid match to the given argument - ie does it match the argument's name or
+     * abbreviation, with a '-' before it
+     * @param arg: String to match
+     * @param namedArg: argument to match against
+     * @return: if given String matches given Arg
+     */
     private fun isValidArgName(arg: String, namedArg: Arg): Boolean {
         return arg == ("-" + namedArg.name) || arg == ("-" + namedArg.abbrev)
     }
@@ -56,6 +79,12 @@ class ArgParser {
         return argsToParams
     }
 
+    /**
+     * Returns if the given 'small' set is a subset of the 'large' set
+     * @param small: smaller set
+     * @param large: larger set
+     * @return: if smaller is subset of large
+     */
     private fun <T> isSubset(small: Set<T>, large: Set<T>): Boolean {
         if (small.size > large.size) {
             throw IllegalArgumentException("small set is larger than large set")
@@ -63,9 +92,13 @@ class ArgParser {
         return small.all { large.contains(it)  }
     }
 
+    /**
+     * Parses the given list of string into a mapping of argument to any parameters that may follow. List must contain
+     * all the requirements arguments of this parser, must not contain any arguments not registered with this parser.
+     * @param arguments: list of strings to parse
+     * @return: mapping of entered arguments to parameters
+     */
     fun parse(arguments: List<String>): Map<String, List<String>> {
-        // TODO check all required arguments are required
-        // TODO check no duplicate arguments
         val requiredArgs: Set<String> = this.getRequiredArgs()
         val argNamesToParams: Map<String, List<String>> = findParams(arguments)
         if (!isSubset(requiredArgs, argNamesToParams.keys)) {
