@@ -18,6 +18,8 @@
 1. train & test 
 1. elitism
 1. migration
+1. evolution strategy
+    1. populate then prune
 1. Local search w/ Lamarckism
     1. hill-climbing
     1. simulated annealing

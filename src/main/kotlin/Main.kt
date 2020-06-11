@@ -1,3 +1,4 @@
+import evolver.DefaultEvolver
 import fitness.FitnessMetric
 import fitness.MeanVarianceMetric
 import fitness.SharpeMetric
@@ -32,6 +33,7 @@ fun getParser(): ArgParser {
     parser.addArg("assetsFile", "af", true)
     parser.addArg("boundary", "b", false)
     parser.addArg("terminate", "t", false)
+    parser.addArg("collect", "c", false)
     return parser
 }
 
@@ -213,6 +215,15 @@ fun toDouble(str: String): Double {
     }
 }
 
+
+fun getSingleBoolean(args: List<String>?): Boolean? {
+    if (args == null) {
+        return null
+    }
+    checkArgsSize(args, 1)
+    return args[0].toBoolean()
+}
+
 fun parseMaxAllocation(args: List<String>?, portfolioSize: Int): MaxAllocation? {
     val value: Double? = getSingleDouble(args)
     return if (value == null) null else MaxAllocation(value, portfolioSize)
@@ -258,6 +269,7 @@ fun main(args: Array<String>) {
     val portfolioSize = getSingleInt(parsedArgs["portSize"]!!)!!
     val maxAllocation: MaxAllocation? = parseMaxAllocation(parsedArgs["boundary"], portfolioSize)
     val terminationThreshold: Double? = getSingleDouble(parsedArgs["terminate"])
+    val collect: Boolean? = getSingleBoolean(parsedArgs["collect"])  // TODO ME
 
     val selector = getSelector(parsedArgs["selector"]!!, iterations)
     val populator = getPopulator(parsedArgs["populator"]!!, assetUniverse, maxAllocation)
@@ -265,7 +277,7 @@ fun main(args: Array<String>) {
     val weightMutator = getWeightMutator(parsedArgs["weightMutate"]!!, iterations)
     val assetMutator = getAssetMutator(parsedArgs["assetMutate"]!!, assetUniverse, iterations)
 
-    val evolver = Evolver(
+    val solution = DefaultEvolver().findSolution(
         selector = selector,
         populator = populator,
         weightMutator = weightMutator,
@@ -275,9 +287,8 @@ fun main(args: Array<String>) {
         popSize = populationSize,
         portfolioSize = portfolioSize,
         terminateThreshold = terminationThreshold,
-        assets = assets.map { it.first }
+        assets = assets.map { it.first },
+        collect = collect
     )
-
-    val solution: List<Pair<String, Double>> = evolver.findSolution()
     printSolution(solution)
 }

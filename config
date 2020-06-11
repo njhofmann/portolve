@@ -12,4 +12,6 @@ assetsFile = data/prices.csv
 # optional
 iterations = 100
 boundary = 
-terminate = 
+terminate =
+# true or false
+collect = true
