@@ -16,10 +16,9 @@ class PositiveInt(val num: Int) {
 
 class MaxAllocation(value: Double, portfolioSize: Int) {
 
-    val num: Double
+    val num: Double = UnitValue(value).num
 
     init {
-        num = UnitValue(value).num
         if ((value * portfolioSize) < 1) {
             throw IllegalArgumentException("max asset allocation must be able to fill a complete portfolio")
         }

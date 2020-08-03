@@ -5,32 +5,17 @@ import fitness.FitnessMetric
 import mutator.asset.AssetMutator
 import mutator.weight.WeightMutator
 import populator.Populator
+import portfolio.Portfolio
 import selector.Selector
 
 /**
  * Represents an evolutionary strategy comprised of various evolutionary operators to solve the optimal portfolio
- * problem for a given set of assets
+ * problem for a given set of assets. Returns a lazily evaluated sequence of Portfolios and their scores for each
+ * generation this Evolver produces
  */
-interface Evolver {
+interface Evolver : Sequence<List<Pair<Portfolio, Double>>> {
 
-    /**
-     *
-     * @param assets:
-     * @param selector:
-     * @param assetMutator:
-     * @param weightMutator:
-     * @param populator:
-     * @param fitnessMetric:
-     * @param popSize:
-     * @param portfolioSize
-     * @param iterations
-     * @param terminateThreshold:
-     * @return
-     */
-    fun findSolution(
-        assets: List<String>, selector: Selector, assetMutator: AssetMutator, weightMutator: WeightMutator,
-        populator: Populator, fitnessMetric: FitnessMetric, popSize: Int, portfolioSize: Int,
-        iterations: PositiveInt?, terminateThreshold: Double?, collect: Boolean?
-    ): List<Pair<String, Double>>
+    fun namePortfolio(portfolio: Portfolio, assets: List<String>): List<Pair<String, Double>>
 
+    override fun iterator(): Iterator<List<Pair<Portfolio, Double>>>
 }

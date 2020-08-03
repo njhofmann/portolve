@@ -1,4 +1,4 @@
-import evolver.DefaultEvolver
+import evolver.PruneThenPopulateEvolver
 import fitness.FitnessMetric
 import fitness.MeanVarianceMetric
 import fitness.SharpeMetric
@@ -277,7 +277,7 @@ fun main(args: Array<String>) {
     val weightMutator = getWeightMutator(parsedArgs["weightMutate"]!!, iterations)
     val assetMutator = getAssetMutator(parsedArgs["assetMutate"]!!, assetUniverse, iterations)
 
-    val solution = DefaultEvolver().findSolution(
+    val solution = PruneThenPopulateEvolver().findSolution(
         selector = selector,
         populator = populator,
         weightMutator = weightMutator,
