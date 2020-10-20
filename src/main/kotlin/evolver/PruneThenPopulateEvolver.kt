@@ -15,30 +15,11 @@ import selector.Selector
  * repopulates
  */
 class PruneThenPopulateEvolver(
-    protected val assets: List<String>, protected val selector: Selector, protected val assetMutator: AssetMutator,
-    protected val weightMutator: WeightMutator, protected val populator: Populator,
-    protected val fitnessMetric: FitnessMetric, protected val popSize: Int, protected val portfolioSize: Int,
-    protected val iterations: PositiveInt?, protected val terminateThreshold: Double?
-) : Evolver {
-
-    init {
-        if (popSize < 1 || portfolioSize < 1 || (terminateThreshold != null && terminateThreshold < 0)) {
-            throw IllegalArgumentException("population size, portfolio size, and termination threshold must be > 0")
-        } else if (portfolioSize > assets.size) {
-            throw IllegalArgumentException("portfolio size must be less than number of available assets")
-        } else if (iterations == null && terminateThreshold == null) {
-            throw IllegalArgumentException("must provide # of iterations or a termination threshold, or both")
-        }
-    }
-
-    /**
-     * "Names" the given Portfolio by reassociating the assets in the Portfolio with their respective String names,
-     * in the given list of asset names. i-th asset corresponds to the i-th asset name. Returns a list of asset names
-     * to their respective weights, from the original Portfolio.
-     */
-    override fun namePortfolio(portfolio: Portfolio, assets: List<String>): List<Pair<String, Double>> {
-        return portfolio.allocations.map { Pair(assets[it.asset], it.amount) }
-    }
+    private val assets: List<String>, private val selector: Selector, private val assetMutator: AssetMutator,
+    private val weightMutator: WeightMutator, private val populator: Populator,
+    private val fitnessMetric: FitnessMetric, private val popSize: Int, val portfolioSize: Int,
+    private val iterations: PositiveInt?, private val terminateThreshold: Double?
+) : AbstractEvolver(assets, popSize, portfolioSize, iterations, terminateThreshold) {
 
     override fun iterator(): Iterator<List<Pair<Portfolio, Double>>> {
 
@@ -63,9 +44,7 @@ class PruneThenPopulateEvolver(
 
             override fun next(): List<Pair<Portfolio, Double>> {
                 iterCount++
-                if (iterCount == 0) {
-                    return assignScoresToPortfolios(population)
-                }
+                if (iterCount == 0) return assignScoresToPortfolios(population)
 
                 population = populator.populate(
                     targetSize = popSize,
