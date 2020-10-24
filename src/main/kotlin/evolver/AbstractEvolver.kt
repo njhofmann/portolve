@@ -1,10 +1,19 @@
 package evolver
 
 import PositiveInt
+import fitness.FitnessMetric
+import mutator.asset.AssetMutator
+import mutator.weight.WeightMutator
+import populator.Populator
 import portfolio.Portfolio
+import portfolio.getRandomPopulation
+import selector.Selector
 
 abstract class AbstractEvolver(
-    assets: List<String>, popSize: Int, portfolioSize: Int, iterations: PositiveInt?, terminateThreshold: Double?
+    private val assets: List<String>, protected val selector: Selector, protected val assetMutator: AssetMutator,
+    protected val weightMutator: WeightMutator, protected val populator: Populator,
+    private val fitnessMetric: FitnessMetric, protected val popSize: Int, val portfolioSize: Int,
+    private val iterations: PositiveInt?, private val terminateThreshold: Double?
 ) : Evolver {
 
     init {
@@ -25,5 +34,40 @@ abstract class AbstractEvolver(
     override fun namePortfolio(portfolio: Portfolio, assets: List<String>): List<Pair<String, Double>> {
         return portfolio.allocations.map { Pair(assets[it.asset], it.amount) }
     }
+
+    override fun iterator(): Iterator<List<Pair<Portfolio, Double>>> {
+
+        return object : Iterator<List<Pair<Portfolio, Double>>> {
+
+            private var iterCount: Int = 0
+
+            private var population: List<Portfolio> = getRandomPopulation(assets.size, popSize, portfolioSize)
+
+            private var latestFitnessScores: List<Double> = DoubleArray(population.size) { 0.0 }.toList()
+
+            private fun assignScoresToPortfolios(portfolios: List<Portfolio>):
+                    List<Pair<Portfolio, Double>> {
+                latestFitnessScores = fitnessMetric.evaluate(portfolios)
+                return (portfolios.indices).map { Pair(portfolios[it], latestFitnessScores[it]) }
+            }
+
+            override fun hasNext(): Boolean {
+                return !((iterations != null && iterCount == iterations.num)
+                        || (terminateThreshold != null && latestFitnessScores.any { it > terminateThreshold }))
+            }
+
+            override fun next(): List<Pair<Portfolio, Double>> {
+                iterCount++
+                if (iterCount == 0) return assignScoresToPortfolios(population)
+
+                population = newGeneration(population, latestFitnessScores)
+                return assignScoresToPortfolios(population)
+            }
+
+        }
+    }
+
+    abstract fun newGeneration(population: List<Portfolio>, fitnessScores: List<Double>) : List<Portfolio>
 }
+
 

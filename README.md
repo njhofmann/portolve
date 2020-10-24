@@ -1,2 +1,10 @@
 # portolve
-Exploration of the optimal portfolio problem through multi-objective evolutionary algorithm techniques.
+Kotlin & Gradle framework for exploring the task of multi-objective portfolio optimization with evolutionary algorithms.
+
+## Motivation
+
+## Project
+
+### Features
+
+## Setup

@@ -1,27 +1,32 @@
 ## Checklist
-1. finish evolver stategies
+1. finish evolver strategies
+    1. redo docs
+    1. add parser option
+    1. integrate in main function
+1. separate out printing ability of evolver
+    1. make generator / sequence instead?
+    1. move processing ability to main function
+1. simplify main function
+1. README overfaul
 1. more informative config file
+    1. yaml?
 1. specify "goals" for the program
     1. collect out portfolios above threshold w/ N iterations
     1. iterations w/ terminate threshold
-1. prevent duplicate assets in crossover
-    1. double check
-1. fitness functions
+    1. integrate with eolver
+1. additional fitness functions
     1. treynor metric
     1. sortino ratio
     1. continuous metrics
         1. Omega ratio
         1. MAR ratio
+    
+# To Review
+1. prevent duplicate assets in crossover
 1. boundary enforcement / allocation cap
-    1. double check
-1. separate out printing ability of evolver
-    1. make generator / sequence instead?
-    1. move processing ability to main function
 
-1. make portfolio a better allocations wrapper
-1. documentation catch up
 1. refactoring
-1. with and without replacement
+1. with and without replacement?
 1. train & test 
 1. elitism
 

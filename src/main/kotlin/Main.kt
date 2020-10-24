@@ -277,7 +277,7 @@ fun main(args: Array<String>) {
     val weightMutator = getWeightMutator(parsedArgs["weightMutate"]!!, iterations)
     val assetMutator = getAssetMutator(parsedArgs["assetMutate"]!!, assetUniverse, iterations)
 
-    val solution = PruneThenPopulateEvolver().findSolution(
+    val evolver = PruneThenPopulateEvolver(
         selector = selector,
         populator = populator,
         weightMutator = weightMutator,
@@ -287,8 +287,7 @@ fun main(args: Array<String>) {
         popSize = populationSize,
         portfolioSize = portfolioSize,
         terminateThreshold = terminationThreshold,
-        assets = assets.map { it.first },
-        collect = collect
+        assets = assets.map { it.first }
     )
     printSolution(solution)
 }
