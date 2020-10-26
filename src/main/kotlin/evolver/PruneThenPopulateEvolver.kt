@@ -15,7 +15,7 @@ import selector.Selector
  * repopulates
  */
 class PruneThenPopulateEvolver(
-    assets: List<String>, selector: Selector,  assetMutator: AssetMutator, weightMutator: WeightMutator,
+    assets: Int, selector: Selector,  assetMutator: AssetMutator, weightMutator: WeightMutator,
     populator: Populator, fitnessMetric: FitnessMetric,  popSize: Int, portfolioSize: Int, iterations: PositiveInt?,
     terminateThreshold: Double?
 ) : AbstractEvolver(assets, selector, assetMutator, weightMutator, populator, fitnessMetric, popSize, portfolioSize,

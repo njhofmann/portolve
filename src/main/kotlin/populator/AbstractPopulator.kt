@@ -69,7 +69,7 @@ abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: 
                         newAsset = randomItemNoReplacement(unselectedAssetUniverse)
                     }
                     else -> {
-                        print("WARNING: asset universe not big enough to prevent duplicate assets in children")
+                        println("WARNING: asset universe not big enough to prevent duplicate assets in children")
                         newAsset = it.asset
                     }
                 }

@@ -1,5 +1,5 @@
 # form of 'key = values', values can be left empty if needed
-# comments being with hashtag
+# comments begin with hashtag
 fitness = sharpe
 weightMutate = gaussian .1 .1
 assetMutate = random .1
@@ -8,10 +8,11 @@ populator = multi-point 2
 popSize = 20
 portSize = 8
 assetsFile = data/prices.csv
+evolver = pop-prune
 
 # optional
 iterations = 100
 boundary = 
 terminate =
-# true or false
+# double
 collect = true

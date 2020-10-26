@@ -17,8 +17,9 @@ class MultiPointPopulator(private val crossoverPoints: Int, assetUniverse: Int, 
 
     private fun invalidPopulation(portfolios: List<Portfolio>) {
         if (portfolios.any { it.size % crossoverPoints != 0 }) {
-            throw IllegalArgumentException(("population contains a portfolio with that does not factor %d crossover " +
-                    "points").format(crossoverPoints))
+            throw IllegalArgumentException(
+                "population contains a portfolio with that does not factor ${crossoverPoints} crossover points"
+            )
         }
     }
 

@@ -15,7 +15,5 @@ import selector.Selector
  */
 interface Evolver : Sequence<List<Pair<Portfolio, Double>>> {
 
-    fun namePortfolio(portfolio: Portfolio, assets: List<String>): List<Pair<String, Double>>
-
     override fun iterator(): Iterator<List<Pair<Portfolio, Double>>>
 }
