@@ -43,10 +43,7 @@ class MeanVarianceMetric(assetsToReturns: List<Pair<String, List<Double>>>, priv
      * @return: key for x and y
      */
     private fun createKey(x: Int, y: Int): SortedSet<Int> {
-        val key = TreeSet<Int>()
-        key.add(x)
-        key.add(y)
-        return key
+        return listOf(x, y).toSortedSet()
     }
 
     /**

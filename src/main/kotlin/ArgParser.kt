@@ -1,3 +1,5 @@
+import kotlin.system.exitProcess
+
 /**
  * Simple argument parser that defines arguments via a name, an abbreviation, and a required flag
  */
@@ -23,7 +25,7 @@ class ArgParser {
         if (name.isBlank() || abbrev.isBlank()) {
             throw IllegalArgumentException("can't have empty or blank arguments")
         } else if (this.args.any { name == it.name || abbrev == it.abbrev || name == it.abbrev || abbrev == it.name }) {
-            throw IllegalArgumentException("duplicate argument with name %s and abbrev %s".format(name, abbrev))
+            throw IllegalArgumentException("duplicate argument with name $name and abbrev $abbrev")
         }
         args.add(Arg(name, abbrev, required))
     }
@@ -44,16 +46,12 @@ class ArgParser {
      * @return: if given String matches given Arg
      */
     private fun isValidArgName(arg: String, namedArg: Arg): Boolean {
-        return arg == ("-" + namedArg.name) || arg == ("-" + namedArg.abbrev)
+        return arg == ("--" + namedArg.name) || arg == ("-" + namedArg.abbrev)
     }
 
     private fun getArgName(arg: String): String {
-        args.forEach {
-            if (isValidArgName(arg, it)) {
-                return it.name
-            }
-        }
-        throw RuntimeException("%s is an unregistered argument".format(arg))
+        args.forEach { if (isValidArgName(arg, it)) return it.name }
+        throw RuntimeException("${arg} is an unregistered argument")
     }
 
     private fun findNextParam(args: List<String>, startIdx: Int): Int {
@@ -92,6 +90,12 @@ class ArgParser {
         return small.all { large.contains(it)  }
     }
 
+    private fun displayOptions() {
+        println("program arguments")
+        args.forEach { println("-${it.abbrev}, --${it.name}" + (if (it.required) " - required" else "")) }
+        exitProcess(0)
+    }
+
     /**
      * Parses the given list of string into a mapping of argument to any parameters that may follow. List must contain
      * all the requirements arguments of this parser, must not contain any arguments not registered with this parser.
@@ -99,15 +103,20 @@ class ArgParser {
      * @return: mapping of entered arguments to parameters
      */
     fun parse(arguments: Map<String, List<String>>): Map<String, List<String>> {
+        if (arguments.containsKey("-h") || arguments.containsKey("--help")) {
+            displayOptions()
+        }
+
         val requiredArgs: Set<String> = this.getRequiredArgs()
         if (!isSubset(requiredArgs, arguments.keys)) {
-            throw IllegalArgumentException("missing required args %s".format(requiredArgs - arguments.keys))
+            throw IllegalArgumentException("missing required args ${requiredArgs - arguments.keys}")
         }
 
         val uniqueArgs = arguments.keys.distinct()
         if (arguments.size > uniqueArgs.size) {
-            throw IllegalArgumentException("have duplicate arguments %s".format(arguments - uniqueArgs))
+            throw IllegalArgumentException("have duplicate arguments ${arguments - uniqueArgs}")
         }
+
         return arguments
     }
 

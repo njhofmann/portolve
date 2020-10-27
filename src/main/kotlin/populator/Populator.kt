@@ -15,5 +15,4 @@ interface Populator {
      * @return: repopulated Portfolio population
      */
     fun populate(population: List<Portfolio>, targetSize: Int): List<Portfolio>
-
 }

@@ -1,15 +1,14 @@
 ## Checklist
 1. finish evolver strategies
     1. redo docs
-1. simplify main function
-    1. fill out illegal argument expections for class parsing
-1. arg parser help option
+1. arg parser 
     1. error for required options?
 1. misc
-    1. double chec TODO comments
+    1. double check TODO comments
     1. println > print
     1. proper string formatting
-1. README overfaul
+    1. documentation
+1. README overhaul
 1. more informative config file
     1. yaml?
 1. additional fitness functions

@@ -14,12 +14,13 @@ class ShufflePopulator(assetUniverse: Int, maxAllocation: MaxAllocation?) :
         val firstMask = BooleanArray(a.size)
         val second: MutableList<Allocation> = ArrayList(a.size)
         val secondMask = BooleanArray(a.size)
+
         for (i in 0 until a.size) {
             if (Random.nextBoolean()) {
                 first[i] = a.allocations[i]
                 firstMask[i] = true
-                second[i] = a.allocations[i]
-                secondMask[i] = true
+                second[i] = b.allocations[i]
+                secondMask[i] = false
             } else {
                 first[i] = b.allocations[i]
                 firstMask[i] = false
