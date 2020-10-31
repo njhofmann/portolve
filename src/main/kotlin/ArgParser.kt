@@ -15,6 +15,10 @@ class ArgParser {
      */
     private val args: MutableList<Arg> = ArrayList()
 
+    init {
+        addArg("help", "h", false)
+    }
+
     /**
      * Adds an argument to this parser, name and abbreviation must not match an previously added named or abbreviation
      * @param name: name of the argument
@@ -103,7 +107,7 @@ class ArgParser {
      * @return: mapping of entered arguments to parameters
      */
     fun parse(arguments: Map<String, List<String>>): Map<String, List<String>> {
-        if (arguments.containsKey("-h") || arguments.containsKey("--help")) {
+        if (arguments.containsKey("h") || arguments.containsKey("help")) {
             displayOptions()
         }
 
