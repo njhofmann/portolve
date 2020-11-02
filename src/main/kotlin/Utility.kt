@@ -3,8 +3,8 @@ import java.util.*
 import kotlin.math.abs
 import kotlin.math.round
 
-fun isNotUnitValue(value: Double) {
-    if (!(value in 0.0..1.0)) {
+fun checkIsUnitValue(value: Double) {
+    if (value !in 0.0..1.0) {
         throw IllegalArgumentException("param must be in range of (0, 1)")
     }
 }
@@ -22,7 +22,7 @@ fun roundToNearestInt(num: Double): Int {
     return round(num).toInt()
 }
 
-fun <T> randomItemNoReplacement(items: MutableSet<T>): T {
+fun <T> randomItemNoReplace(items: MutableSet<T>): T {
     if (items.isEmpty()) {
         throw IllegalArgumentException("can't select from empty set")
     }

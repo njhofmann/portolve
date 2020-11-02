@@ -1,6 +1,6 @@
 class UnitValue(val num: Double) {
     init {
-        isNotUnitValue(num)
+        checkIsUnitValue(num)
     }
 }
 

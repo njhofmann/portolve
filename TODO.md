@@ -1,17 +1,11 @@
 ## Checklist
-1. finish evolver strategies
-    1. redo docs
-1. arg parser 
-    1. add descriptions option
-    1. error for required options?
-1. misc
-    1. double check TODO comments
-    1. println > print
-    1. proper string formatting
-    1. documentation
 1. README overhaul
     1. details of implementation
-    1. how to setup kotlin and gradle
+    1. how to setup project w kotlin and gradle
+1. misc
+    1. double check TODO comments
+    1. replace print statements with logging
+    1. documentation
 1. more informative config file
     1. yaml?
 1. additional fitness functions

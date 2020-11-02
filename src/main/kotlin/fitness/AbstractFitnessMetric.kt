@@ -10,14 +10,16 @@ import portfolio.Portfolio
 abstract class AbstractFitnessMetric(private val assetsToReturns: List<Pair<String, List<Double>>>) : FitnessMetric {
 
     init {
-        if (assetsToReturns.isEmpty()) {
-            throw IllegalArgumentException("given asset universe must be non-empty")
-        }
-        else if (assetsToReturns.any { it.second.size != assetsToReturns[0].second.size }) {
-            throw IllegalArgumentException("each set of asset returns must be the same size")
-        }
-        else if (assetsToReturns[0].second.isEmpty()) {
-            throw IllegalArgumentException("asset returns must be non-empty")
+        when {
+            assetsToReturns.isEmpty() -> {
+                throw IllegalArgumentException("given asset universe must be non-empty")
+            }
+            assetsToReturns.any { it.second.size != assetsToReturns[0].second.size } -> {
+                throw IllegalArgumentException("each set of asset returns must be the same size")
+            }
+            assetsToReturns[0].second.isEmpty() -> {
+                throw IllegalArgumentException("asset returns must be non-empty")
+            }
         }
     }
 

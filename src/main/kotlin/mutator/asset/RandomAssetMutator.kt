@@ -5,7 +5,7 @@ import mutator.AbstractMutator
 import portfolio.Allocation
 import portfolio.DefaultPortfolio
 import portfolio.Portfolio
-import randomItemNoReplacement
+import randomItemNoReplace
 
 /**
  * Implementation of the AssetMutator interface, providing random mutation for the assets in a Portfolio. Takes in the
@@ -30,22 +30,31 @@ class RandomAssetMutator(assetUniverse: Int, mutationRate: Double, finalMutation
      * @return: asset ids not in given Portfolio
      */
     private fun getAvailableAssets(portfolio: Portfolio): MutableSet<Int> {
-        // TODO check portfolio assets are in universe
-        return (allAssets - portfolio.allocations.map { it.asset }).toMutableSet()
+        val portfolioAssets = portfolio.allocations.map { it.asset }
+        if (!allAssets.containsAll(portfolioAssets)) {
+            throw IllegalArgumentException("portfolio contains assets that are not in the universe of assets")
+        }
+        return (allAssets - portfolioAssets).toMutableSet()
     }
 
     /**
      * Mutates the assets in the given Portfolio via the given mutation threshold. If an asset if selected for mutation,
      * selects a random asset from the universe of all assets that are not already apart of the Portfolio
-     * @param portfolio: Portfolio to possibly mutate
+     * @param portfolio: Portfolio to possibly. If there are no assets left to select, prints a warning.
      * @param mutateThreshold: threshold determining if mutation will occur
      * @return: mutated Portfolio
      */
     override fun mutatePortfolio(portfolio: Portfolio, mutateThreshold: Double): Portfolio {
-        // TODO case where more items are mutated than available
         val availableAssets = getAvailableAssets(portfolio)
         return DefaultPortfolio(portfolio.allocations.map {
-            if (toMutate(mutateThreshold)) Allocation(randomItemNoReplacement(availableAssets), it.amount) else it
+            if (availableAssets.isNotEmpty() && toMutate(mutateThreshold)) {
+                Allocation(randomItemNoReplace(availableAssets), it.amount)
+            } else {
+                if (availableAssets.isEmpty()) {
+                    println("warning: asset universe empty, mutation ended prematurely")  // TODO replace w logging
+                }
+                it
+            }
         })
     }
 

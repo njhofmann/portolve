@@ -48,7 +48,6 @@ class DefaultPortfolio : Portfolio {
             throw IllegalArgumentException("must have at least one asset in this Portfolio")
         }
         else if (!sumToOne(allocations)) {
-            print(allocations.map { it.amount}.sum())
             throw IllegalArgumentException("Allocation weights in a Portfolio must sum to 1")
         }
         else if (!uniqueAllocations(allocations)) {

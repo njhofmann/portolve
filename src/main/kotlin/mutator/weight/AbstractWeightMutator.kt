@@ -2,7 +2,7 @@ package mutator.weight
 
 import MaxAllocation
 import PositiveInt
-import isNotUnitValue
+import checkIsUnitValue
 import mutator.AbstractMutator
 import portfolio.Allocation
 import portfolio.DefaultPortfolio
@@ -15,7 +15,7 @@ abstract class AbstractWeightMutator(protected val boundary: Double, mutationRat
     WeightMutator, AbstractMutator(mutationRate, finalMutationRate, iterations) {
 
     init {
-        isNotUnitValue(boundary)
+        checkIsUnitValue(boundary)
     }
 
     abstract fun getMutationValue(): Double

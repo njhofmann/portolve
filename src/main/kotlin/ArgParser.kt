@@ -1,14 +1,14 @@
 import kotlin.system.exitProcess
 
 /**
- * Simple argument parser that defines arguments via a name, an abbreviation, and a required flag
+ * Simple argument parser that defines arguments via a name, an abbreviation, and short description, and a required flag
  */
 class ArgParser {
 
     /**
-     * An argument comprised of a name, an abbreviation, and required flag
+     * An argument comprised of a name, an abbreviation, a description, and a required flag
      */
-    private data class Arg(val name: String, val abbrev: String, val required: Boolean)
+    private data class Arg(val name: String, val abbrev: String, val description: String, val required: Boolean)
 
     /**
      * Args that have been added to this Parser
@@ -16,22 +16,23 @@ class ArgParser {
     private val args: MutableList<Arg> = ArrayList()
 
     init {
-        addArg("help", "h", false)
+        addArg("help", "h", false, "details the arguments this program / parser takes in")
     }
 
     /**
-     * Adds an argument to this parser, name and abbreviation must not match an previously added named or abbreviation
+     * Adds an argument to this parser, name and abbreviation must not match an previously added name or abbreviation
      * @param name: name of the argument
      * @param abbrev: abbreviation of the argument
      * @param required: if the argument should be required
+     * @param desp: description of what the argument represents
      */
-    fun addArg(name: String, abbrev: String, required: Boolean) {
+    fun addArg(name: String, abbrev: String, required: Boolean, desp: String) {
         if (name.isBlank() || abbrev.isBlank()) {
             throw IllegalArgumentException("can't have empty or blank arguments")
         } else if (this.args.any { name == it.name || abbrev == it.abbrev || name == it.abbrev || abbrev == it.name }) {
             throw IllegalArgumentException("duplicate argument with name $name and abbrev $abbrev")
         }
-        args.add(Arg(name, abbrev, required))
+        args.add(Arg(name, abbrev, desp, required))
     }
 
     /**
@@ -96,7 +97,10 @@ class ArgParser {
 
     private fun displayOptions() {
         println("program arguments")
-        args.forEach { println("-${it.abbrev}, --${it.name}" + (if (it.required) " - required" else "")) }
+        args.forEach {
+            val required = if (it.required) " - required" else ""
+            println("-${it.abbrev}, --${it.name}$required ${it.description}")
+        }
         exitProcess(0)
     }
 

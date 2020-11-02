@@ -13,6 +13,13 @@ import portfolio.Portfolio
 class SharpeMetric(assetsToReturns: List<Pair<String, List<Double>>>, private val avgRateFreeReturn: List<Double>) :
     AbstractFitnessMetric(assetsToReturns) {
 
+    init {
+        // asset sizes are already checked
+        if (avgRateFreeReturn.size != assetsToReturns.first().second.size) {
+            throw IllegalArgumentException("average rate free return size must equal number of returns for each asset")
+        }
+    }
+
     /**
      * Applies the Sharpe ratio to the given Portfolio
      * @param portfolio: Portfolio to score

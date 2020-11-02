@@ -10,9 +10,7 @@ import portfolio.getRandomPopulation
 import selector.Selector
 
 /**
- * An evolutionary algorithm constructed from the given operation classes (Mutator, Selectors, FitnessMetric, and
- * Populator) and various parameters (asset universe, population size, etc.). First prunes the population then
- * repopulates
+ * Implementation of the Evolver interface that prunes the population, then repopulates it
  */
 class PruneThenPopulateEvolver(
     assets: Int, selector: Selector,  assetMutator: AssetMutator, weightMutator: WeightMutator,

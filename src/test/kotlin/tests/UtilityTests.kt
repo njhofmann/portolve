@@ -2,7 +2,7 @@ package tests
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertThrows
-import randomItemNoReplacement
+import randomItemNoReplace
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import unzipPairs
@@ -12,7 +12,7 @@ class RandomItemNoReplacement {
     @Test
     fun `empty set`(){
         assertThrows(IllegalArgumentException::class.java) {
-            randomItemNoReplacement(HashSet<Int>())
+            randomItemNoReplace(HashSet<Int>())
         }
     }
 
@@ -20,7 +20,7 @@ class RandomItemNoReplacement {
     fun `removed item not present`() {
         val items = (0..9).toMutableSet()
         assertEquals(10, items.size)
-        val selectedItem = randomItemNoReplacement(items)
+        val selectedItem = randomItemNoReplace(items)
         assertEquals(9, items.size)
         assertFalse(items.contains(selectedItem))
     }

@@ -4,7 +4,7 @@ import MaxAllocation
 import portfolio.Allocation
 import portfolio.DefaultPortfolio
 import portfolio.Portfolio
-import randomItemNoReplacement
+import randomItemNoReplace
 import unzipPairs
 import java.util.*
 import kotlin.collections.HashSet
@@ -62,11 +62,11 @@ abstract class AbstractPopulator(assetUniverse: Int, private val maxAllocation: 
                 val newAsset: Int
                 when {
                     unselectedAssets.isNotEmpty() -> {
-                        newAsset = randomItemNoReplacement(unselectedAssets)
+                        newAsset = randomItemNoReplace(unselectedAssets)
                         unselectedAssetUniverse.remove(newAsset)
                     }
                     unselectedAssetUniverse.isNotEmpty() -> {
-                        newAsset = randomItemNoReplacement(unselectedAssetUniverse)
+                        newAsset = randomItemNoReplace(unselectedAssetUniverse)
                     }
                     else -> {
                         println("WARNING: asset universe not big enough to prevent duplicate assets in children")

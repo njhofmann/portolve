@@ -21,7 +21,7 @@ population of possible solutions and iteratively producing new "generations" thr
  solutions that don't fit the objective function, mutating the population, and then repopulating the population through
 "breeding" between solutions. The exact objective function, solution representation, and other details are usually 
 implementation details usually determined by the context of the problem at hand. 
-
+% more implementation details? learn more at..?
 Either way, the hope is that over time, better generations are bred leading to better solutions.
 
 This framework provides a wide range of "drag-and-drop" evolutionary algorithmic techniques, objection 

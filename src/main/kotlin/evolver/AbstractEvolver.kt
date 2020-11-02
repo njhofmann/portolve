@@ -9,6 +9,10 @@ import portfolio.Portfolio
 import portfolio.getRandomPopulation
 import selector.Selector
 
+/**
+ * Main abstract implementation of the Evolver interface, provides all the main functionality that is likely needed for
+ * the interface aside from a specific implementation for how each new generation should be produced
+ */
 abstract class AbstractEvolver(
     private val assetsCount: Int, protected val selector: Selector, protected val assetMutator: AssetMutator,
     protected val weightMutator: WeightMutator, protected val populator: Populator,

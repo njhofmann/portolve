@@ -13,11 +13,11 @@ abstract class AbstractRateAnnealer(private val startPercent: Double, private va
     private var curIteration: Int = 0
 
     init {
-        isNotUnitValue(startPercent)
-        if (endPercent != null) {
-            isNotUnitValue(endPercent)
-        } else if (!((iterations == null && endPercent == null) || (iterations != null && endPercent != null))) {
+        checkIsUnitValue(startPercent)
+        if (!((iterations == null && endPercent == null) || (iterations != null && endPercent != null))) {
             throw IllegalArgumentException("iterations and end percent must both be given, or both absent")
+        } else if (endPercent != null) {
+            checkIsUnitValue(endPercent)
         }
     }
 
