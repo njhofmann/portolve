@@ -20,6 +20,7 @@ class PopulateThenPruneEvolver(
 
 
     override fun newGeneration(population: List<Portfolio>, fitnessScores: List<Double>): List<Portfolio> {
+        // TODO fix fitness scores size
         var newPop = populator.populate(population, popSize)
         newPop = assetMutator.mutateAssets(newPop)
         newPop = weightMutator.mutateWeights(newPop)

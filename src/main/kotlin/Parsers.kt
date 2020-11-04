@@ -88,10 +88,11 @@ fun getFitnessMetric(args: List<String>, assetReturns: List<Pair<String, List<Do
     val (type, params) = splitListHead(args)
     return when (type) {
         "sharpe" -> {
+            val riskFreeReturns = loadAssetReturns(params[0]).first().second
             checkArgsSize(params, 1)
             SharpeMetric(
                 assetsToReturns = assetReturns,
-                avgRateFreeReturn = loadAssetReturns(params[0]).first().second
+                avgRateFreeReturn = riskFreeReturns
             )
         }
         "mean-var" -> {

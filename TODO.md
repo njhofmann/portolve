@@ -1,5 +1,5 @@
 ## Checklist
-1. compute returns option for avg rate free returns
+1. abstract out fitness scores for nextGen function, fix pop-prune
 1. README overhaul
     1. details of implementation
     1. how to run program

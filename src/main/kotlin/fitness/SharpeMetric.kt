@@ -26,8 +26,12 @@ class SharpeMetric(assetsToReturns: List<Pair<String, List<Double>>>, private va
      * @return: Portfolio's score
      */
     override fun score(portfolio: Portfolio): Double {
-        val avgReturns = portfolio.allocations.map { Pair(it.amount, getIthAssetReturns(it.asset).average()) }
-        val weightedReturns =  avgReturns.mapIndexed { idx, d -> d.first * (d.second - avgRateFreeReturn[idx]) }
-        return weightedReturns.sum() / avgReturns.map { it.second }.standardDeviation()
+        val avgAdjustedReturns = portfolio.allocations.map {
+            Pair(it.amount, getIthAssetReturns(it.asset).mapIndexed { idx, d -> d -
+                    avgRateFreeReturn[idx]
+            }.average())
+        }
+        val weightedReturns =  avgAdjustedReturns.map { it.first * it.second }
+        return weightedReturns.sum() / avgAdjustedReturns.map { it.second }.standardDeviation()
     }
 }

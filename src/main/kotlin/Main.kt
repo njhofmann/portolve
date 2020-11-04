@@ -70,7 +70,7 @@ fun runEvolver(evolver: Evolver, assetNames: List<String>, collectSolutions: Dou
     var i = 0
     for (generation in evolver) {
         val bestCurSolution = generation.maxBy { it.second }!!
-        if (bestSolution == null || bestSolution.second > bestCurSolution.second) {
+        if (bestSolution == null || bestSolution.second < bestCurSolution.second) {
             bestSolution = bestCurSolution
         }
 
