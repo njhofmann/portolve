@@ -1,13 +1,13 @@
 # form of 'key = values', values can be left empty if needed
 # comments begin with hashtag
-fitness = sharpe
+fitness = sharpe data/10_year_treasury_close_data_2019-11-04_to_2020-10-30.csv
 weightMutate = gaussian .1 .1
 assetMutate = random .1
 selector = tourny 2 .75
 populator = multi-point 2
 popSize = 20
 portSize = 8
-assetsFile = data/prices.csv
+assetsFile = data/sp500_close_data_2019-11-04_to_2020-10-30.csv
 evolver = pop-prune
 
 # optional

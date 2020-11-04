@@ -1,6 +1,8 @@
 ## Checklist
+1. compute returns option for avg rate free returns
 1. README overhaul
     1. details of implementation
+    1. how to run program
     1. how to setup project w kotlin and gradle
 1. misc
     1. double check TODO comments

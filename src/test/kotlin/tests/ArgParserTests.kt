@@ -27,7 +27,7 @@ class ArgParserTests {
 
     @Test
     fun `add single non-required arg no body`() {
-        parser.addArg("foo", "f", false)
+        parser.addArg("foo", "f", false, "")
         parsedArgs = parser.parse("-foo".split(" "))
         assert(parsedArgs.containsKey("foo"))
         assertEquals(1, parsedArgs.size)
@@ -35,7 +35,7 @@ class ArgParserTests {
 
     @Test
     fun `add single required arg no body`() {
-        parser.addArg("foo", "f", true)
+        parser.addArg("foo", "f", true, "")
         parsedArgs = parser.parse("-foo".split(" "))
         assert(parsedArgs.containsKey("foo"))
         assertEquals(1, parsedArgs.size)
@@ -43,7 +43,7 @@ class ArgParserTests {
 
     @Test
     fun `add single non-required arg with body`() {
-        parser.addArg("foo", "f", false)
+        parser.addArg("foo", "f", false, "")
         parsedArgs = parser.parse("-f nate is cool".split(" "))
         assertEquals(1, parsedArgs.size)
         assert(parsedArgs.containsKey("foo"))
@@ -52,7 +52,7 @@ class ArgParserTests {
 
     @Test
     fun `add single required arg with body`() {
-        parser.addArg("foo", "f", true)
+        parser.addArg("foo", "f", true, "")
         parsedArgs = parser.parse("-f nate is cool".split(" "))
         assertEquals(1, parsedArgs.size)
         assert(parsedArgs.containsKey("foo"))
@@ -61,8 +61,8 @@ class ArgParserTests {
 
     @Test
     fun `add multiple args no body missing non-required`() {
-        parser.addArg("foo", "f", true)
-        parser.addArg("bar", "b", false)
+        parser.addArg("foo", "f", true, "")
+        parser.addArg("bar", "b", false, "")
         parsedArgs = parser.parse("-f".split(" "))
         assertEquals(1, parsedArgs.size)
         assert(parsedArgs.containsKey("foo"))
@@ -78,7 +78,7 @@ class ArgParserTests {
 
     @Test
     fun `fail unregistered argument multiple arg`() {
-        parser.addArg("bar", "b", true)
+        parser.addArg("bar", "b", true, "")
         assertThrows(RuntimeException::class.java) {
             parser.parse("-f".split(" "))
         }
@@ -86,40 +86,40 @@ class ArgParserTests {
 
     @Test
     fun `fail to add duplicate name by name`() {
-        parser.addArg("foo", "f", true)
+        parser.addArg("foo", "f", true, "")
         assertThrows(IllegalArgumentException::class.java) {
-            parser.addArg("foo", "g", true)
+            parser.addArg("foo", "g", true, "")
         }
     }
 
     @Test
     fun `fail to add duplicate abbrev by abbrev`() {
-        parser.addArg("foo", "f", true)
+        parser.addArg("foo", "f", true, "")
         assertThrows(IllegalArgumentException::class.java) {
-            parser.addArg("bar", "f", true)
+            parser.addArg("bar", "f", true, "")
         }
     }
 
     @Test
     fun `fail to add duplicate name by abbrev`() {
-        parser.addArg("foo", "f", true)
+        parser.addArg("foo", "f", true, "")
         assertThrows(IllegalArgumentException::class.java) {
-            parser.addArg("bazinga", "foo", true)
+            parser.addArg("bazinga", "foo", true, "")
         }
     }
 
     @Test
     fun `fail to add duplicate abbrev by name`() {
-        parser.addArg("foo", "f", true)
+        parser.addArg("foo", "f", true, "")
         assertThrows(IllegalArgumentException::class.java) {
-            parser.addArg("f", "bazinga", true)
+            parser.addArg("f", "bazinga", true, "")
         }
     }
 
     @Test
     fun `fail to add required arg no body`() {
-        parser.addArg("foo", "f", true)
-        parser.addArg("bar", "b", false)
+        parser.addArg("foo", "f", true, "")
+        parser.addArg("bar", "b", false, "")
         assertThrows(IllegalArgumentException::class.java) {
             parser.parse("-bar".split(" "))
         }
@@ -127,8 +127,8 @@ class ArgParserTests {
 
     @Test
     fun `fail to add required arg with body`() {
-        parser.addArg("foo", "f", true)
-        parser.addArg("bar", "b", false)
+        parser.addArg("foo", "f", true, "")
+        parser.addArg("bar", "b", false, "")
         assertThrows(IllegalArgumentException::class.java) {
             parser.parse("-bar lol nate".split(" "))
         }
@@ -136,8 +136,8 @@ class ArgParserTests {
 
     @Test
     fun `add multiple required args with no bodies`() {
-        parser.addArg("foo", "f", true)
-        parser.addArg("bar", "b", true)
+        parser.addArg("foo", "f", true, "")
+        parser.addArg("bar", "b", true, "")
         parsedArgs = parser.parse("-bar -foo".split(" "))
         assert(parsedArgs.containsKey("bar"))
         assert(parsedArgs.containsKey("foo"))
@@ -147,8 +147,8 @@ class ArgParserTests {
 
     @Test
     fun `add multiple non-required args with no bodies`() {
-        parser.addArg("foo", "f", false)
-        parser.addArg("bar", "b", false)
+        parser.addArg("foo", "f", false, "")
+        parser.addArg("bar", "b", false, "")
         parsedArgs = parser.parse("-bar -foo".split(" "))
         assert(parsedArgs.containsKey("bar"))
         assert(parsedArgs.containsKey("foo"))
@@ -158,9 +158,9 @@ class ArgParserTests {
 
     @Test
     fun `add multiple args with varying bodies`() {
-        parser.addArg("foo", "f", true)
-        parser.addArg("bar", "b", true)
-        parser.addArg("far", "a", false)
+        parser.addArg("foo", "f", true, "")
+        parser.addArg("bar", "b", true, "")
+        parser.addArg("far", "a", false, "")
         parsedArgs = parser.parse("-far nate is cool -foo lol man -bar coolio".split(" "))
 
         assertEquals(3, parsedArgs.size)
@@ -174,11 +174,11 @@ class ArgParserTests {
 
     @Test
     fun `add multiple args with varying bodies missing non-required`() {
-        parser.addArg("foo", "f", true)
-        parser.addArg("bar", "b", true)
-        parser.addArg("far", "a", true)
-        parser.addArg("lol", "l", false)
-        parser.addArg("pop", "p", false)
+        parser.addArg("foo", "f", true, "")
+        parser.addArg("bar", "b", true, "")
+        parser.addArg("far", "a", true, "")
+        parser.addArg("lol", "l", false, "")
+        parser.addArg("pop", "p", false, "")
         parsedArgs = parser.parse("-far nate is cool -foo lol man -bar coolio -p i u o".split(" "))
 
         assertEquals(4, parsedArgs.size)
