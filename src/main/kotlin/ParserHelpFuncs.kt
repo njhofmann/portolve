@@ -16,7 +16,7 @@ fun splitListHead(args: List<String>): Pair<String, List<String>> {
 }
 
 fun getSingleInt(args: List<String>?): Int? {
-    if (args == null) {
+    if (args == null || args.isEmpty()) {
         return null
     }
     checkArgsSize(args, 1)
@@ -24,7 +24,7 @@ fun getSingleInt(args: List<String>?): Int? {
 }
 
 fun getSingleDouble(args: List<String>?): Double? {
-    if (args == null) {
+    if (args == null || args.isEmpty()) {
         return null
     }
     checkArgsSize(args, 1)

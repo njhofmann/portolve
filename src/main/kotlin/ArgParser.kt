@@ -101,31 +101,33 @@ class ArgParser {
             val required = if (it.required) " - required" else ""
             println("-${it.abbrev}, --${it.name}$required ${it.description}")
         }
-        exitProcess(0)
     }
 
     /**
      * Parses the given list of string into a mapping of argument to any parameters that may follow. List must contain
      * all the requirements arguments of this parser, must not contain any arguments not registered with this parser.
-     * @param arguments: list of strings to parse
+     * @param args: list of strings to parse
      * @return: mapping of entered arguments to parameters
      */
-    fun parse(arguments: Map<String, List<String>>): Map<String, List<String>> {
-        if (arguments.containsKey("h") || arguments.containsKey("help")) {
+    fun parse(args: Map<String, List<String>>): Map<String, List<String>> {
+        if (args.containsKey("h") || args.containsKey("help")) {
             displayOptions()
+            exitProcess(0)
         }
+
+        val filteredArgs = args.filter { it.value.isNotEmpty() }
 
         val requiredArgs: Set<String> = this.getRequiredArgs()
-        if (!isSubset(requiredArgs, arguments.keys)) {
-            throw IllegalArgumentException("missing required args ${requiredArgs - arguments.keys}")
+        if (!isSubset(requiredArgs, filteredArgs.keys)) {
+            throw IllegalArgumentException("missing required args ${requiredArgs - filteredArgs.keys}")
         }
 
-        val uniqueArgs = arguments.keys.distinct()
-        if (arguments.size > uniqueArgs.size) {
-            throw IllegalArgumentException("have duplicate arguments ${arguments - uniqueArgs}")
+        val uniqueArgs = filteredArgs.keys.distinct()
+        if (filteredArgs.size > uniqueArgs.size) {
+            throw IllegalArgumentException("have duplicate arguments ${filteredArgs - uniqueArgs}")
         }
 
-        return arguments
+        return filteredArgs
     }
 
     fun parse(arguments: List<String>): Map<String, List<String>> {

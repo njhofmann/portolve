@@ -69,7 +69,7 @@ fun runEvolver(evolver: Evolver, assetNames: List<String>, collectSolutions: Dou
     val validSolutions: MutableList<Pair<Portfolio, Double>> = LinkedList()
     var i = 0
     for (generation in evolver) {
-        val bestCurSolution = generation.maxBy { it.second }!!
+        val bestCurSolution = generation.maxByOrNull { it.second }!!
         if (bestSolution == null || bestSolution.second < bestCurSolution.second) {
             bestSolution = bestCurSolution
         }
@@ -78,12 +78,12 @@ fun runEvolver(evolver: Evolver, assetNames: List<String>, collectSolutions: Dou
             validSolutions.addAll(generation.filter { it.second > collectSolutions })
         }
 
-        println("Generation $i: best - ${bestCurSolution.second}, average - ${generation.map { it.second }.average()}")
+        println("Generation $i, best: ${bestCurSolution.second}, average: ${generation.map { it.second }.average()}")
         i++
     }
 
     if (bestSolution != null) {
-        println("Best Solution: score - ${bestSolution.second}")
+        println("\nBest Solution: score - ${bestSolution.second}")
         printSolution(namePortfolio(bestSolution.first, assetNames))
     }
 

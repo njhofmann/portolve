@@ -6,7 +6,6 @@ import mutator.asset.AssetMutator
 import mutator.weight.WeightMutator
 import populator.Populator
 import portfolio.Portfolio
-import portfolio.getRandomPopulation
 import selector.Selector
 
 /**
@@ -19,10 +18,11 @@ class PruneThenPopulateEvolver(
 ) : AbstractEvolver(assets, selector, assetMutator, weightMutator, populator, fitnessMetric, popSize, portfolioSize,
     iterations, terminateThreshold) {
 
-    override fun newGeneration(population: List<Portfolio>, fitnessScores: List<Double>): List<Portfolio> {
-        var newPop = selector.prune(population, fitnessScores)
+    override fun newGeneration(population: List<Portfolio>, oldScores: List<Double>): Pair<List<Portfolio>, List<Double>> {
+        var newPop = selector.prune(population, oldScores)
         newPop = assetMutator.mutateAssets(newPop)
         newPop = weightMutator.mutateWeights(newPop)
-        return populator.populate(newPop, popSize)
+        newPop = populator.populate(newPop, popSize)
+        return Pair(newPop, fitnessMetric.evaluate(newPop))
     }
 }

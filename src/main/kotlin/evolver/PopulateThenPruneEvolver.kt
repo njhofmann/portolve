@@ -19,11 +19,11 @@ class PopulateThenPruneEvolver(
     iterations, terminateThreshold) {
 
 
-    override fun newGeneration(population: List<Portfolio>, fitnessScores: List<Double>): List<Portfolio> {
-        // TODO fix fitness scores size
+    override fun newGeneration(population: List<Portfolio>, oldScores: List<Double>): Pair<List<Portfolio>, List<Double>> {
         var newPop = populator.populate(population, popSize)
         newPop = assetMutator.mutateAssets(newPop)
         newPop = weightMutator.mutateWeights(newPop)
-        return selector.prune(newPop, fitnessScores)
+        newPop = selector.prune(newPop, fitnessMetric.evaluate(newPop))
+        return Pair(newPop, fitnessMetric.evaluate(newPop))
     }
 }

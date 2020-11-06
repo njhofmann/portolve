@@ -1,18 +1,18 @@
 # form of 'key = values', values can be left empty if needed
 # comments begin with hashtag
-fitness = sharpe data/10_year_treasury_close_data_2019-10-29_to_2020-10-22.csv
-weightMutate = gaussian .1 .1
-assetMutate = random .1
-selector = tourny 2 .75
+fitness = sharpe data/2019-10-29_to_2020-10-29/sp500_ten_year_treasury.csv 252
+weightMutate = gaussian .05 .05
+assetMutate = random .05
+selector = tourny 2 .5
 populator = multi-point 2
 popSize = 20
-portSize = 8
-assetsFile = data/sp500_close_data_2019-10-29_to_2020-10-22.csv
-evolver = prune-pop
+portSize = 10
+assetsFile = data/2019-10-29_to_2020-10-29/sp500.csv
+evolver = pop-prune
 
 # optional, uncomment to use
-iterations = 10000
-# boundary =
-# terminate =
+iterations = 100000
+boundary =
+terminate =
 # double
-collect = 2.0
+collect =

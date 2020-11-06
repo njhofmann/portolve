@@ -1,21 +1,16 @@
 ## Checklist
-1. abstract out fitness scores for nextGen function, fix pop-prune
 1. README overhaul
     1. details of implementation
     1. how to run program
+    1. expected inputs in relation to ratios!
     1. how to setup project w kotlin and gradle
 1. misc
     1. double check TODO comments
     1. replace print statements with logging
     1. documentation
-1. more informative config file
-    1. yaml?
 1. additional fitness functions
     1. treynor metric
     1. sortino ratio
-    1. continuous metrics
-        1. Omega ratio
-        1. MAR ratio
     
 # To Review
 1. prevent duplicate assets in crossover

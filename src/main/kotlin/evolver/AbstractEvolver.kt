@@ -8,6 +8,7 @@ import populator.Populator
 import portfolio.Portfolio
 import portfolio.getRandomPopulation
 import selector.Selector
+import javax.sound.sampled.Port
 
 /**
  * Main abstract implementation of the Evolver interface, provides all the main functionality that is likely needed for
@@ -16,7 +17,7 @@ import selector.Selector
 abstract class AbstractEvolver(
     private val assetsCount: Int, protected val selector: Selector, protected val assetMutator: AssetMutator,
     protected val weightMutator: WeightMutator, protected val populator: Populator,
-    private val fitnessMetric: FitnessMetric, protected val popSize: Int, val portfolioSize: Int,
+    protected val fitnessMetric: FitnessMetric, protected val popSize: Int, val portfolioSize: Int,
     private val iterations: PositiveInt?, private val terminateThreshold: Double?
 ) : Evolver {
 
@@ -40,10 +41,13 @@ abstract class AbstractEvolver(
 
             private var latestFitnessScores: List<Double> = DoubleArray(population.size) { 0.0 }.toList()
 
-            private fun assignScoresToPortfolios(portfolios: List<Portfolio>):
-                    List<Pair<Portfolio, Double>> {
+            private fun assignScoresToPortfolios(portfolios: List<Portfolio>): List<Pair<Portfolio, Double>> {
                 latestFitnessScores = fitnessMetric.evaluate(portfolios)
-                return (portfolios.indices).map { Pair(portfolios[it], latestFitnessScores[it]) }
+                return pairScores(portfolios, latestFitnessScores)
+            }
+
+            private fun pairScores(portfolios: List<Portfolio>, scores: List<Double>): List<Pair<Portfolio, Double>> {
+                return (portfolios.indices).map { Pair(portfolios[it], scores[it]) }
             }
 
             override fun hasNext(): Boolean {
@@ -55,14 +59,15 @@ abstract class AbstractEvolver(
                 iterCount++
                 if (iterCount == 0) return assignScoresToPortfolios(population)
 
-                population = newGeneration(population, latestFitnessScores)
-                return assignScoresToPortfolios(population)
+                val results = newGeneration(population, latestFitnessScores)
+                latestFitnessScores = results.second
+                return pairScores(results.first, latestFitnessScores)
             }
 
         }
     }
 
-    abstract fun newGeneration(population: List<Portfolio>, fitnessScores: List<Double>) : List<Portfolio>
+    abstract fun newGeneration(population: List<Portfolio>, oldScores: List<Double>) : Pair<List<Portfolio>, List<Double>>
 }
 
 
