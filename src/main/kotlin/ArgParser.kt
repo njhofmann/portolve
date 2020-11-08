@@ -98,8 +98,8 @@ class ArgParser {
     private fun displayOptions() {
         println("program arguments")
         args.forEach {
-            val required = if (it.required) " - required" else ""
-            println("-${it.abbrev}, --${it.name}$required ${it.description}")
+            val required = if (it.required) " (required)" else ""
+            println("-${it.abbrev}, --${it.name}$required\n${it.description}\n")
         }
     }
 

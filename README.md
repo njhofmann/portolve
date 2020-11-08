@@ -22,7 +22,7 @@ population of possible solutions and iteratively producing new "generations" thr
 "breeding" between solutions. The exact objective function, solution representation, and other details are usually 
 implementation details usually determined by the context of the problem at hand. 
 % more implementation details? learn more at..?
-Either way, the hope is that over time, better generations are bred leading to better solutions.
+Either way, the hope is that over time, better generations pressured for leading to better solutions.
 
 This framework provides a wide range of "drag-and-drop" evolutionary algorithmic techniques, objection 
 functions, and a various number of other parameters - all that is needed is some collection of assets and some history
@@ -45,6 +45,8 @@ The framework offers the following evolutionary strategies, objective functions,
 - **Objective Functions**
 
 - **Misc**
+
+Enter the `--help` flag into the main function to get more details and the parameters they each expect.
 
 ## Setup
 

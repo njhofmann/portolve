@@ -94,7 +94,7 @@ class MeanVarianceMetric(assetsToReturns: List<Pair<String, List<Double>>>, priv
         return when (lambda) {
             0.0 -> computeExpectedReturn(selectedReturns)
             1.0 -> computeExpectedRisk(selectedReturns)
-            else -> (lambda * (computeExpectedRisk(selectedReturns) + computeExpectedRisk(selectedReturns))) - 1
+            else -> (lambda * computeExpectedRisk(selectedReturns)) - ((1 - lambda) * computeExpectedReturn(selectedReturns))
         }
     }
 }

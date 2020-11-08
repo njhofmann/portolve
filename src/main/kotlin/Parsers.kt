@@ -3,7 +3,8 @@ import evolver.PopulateThenPruneEvolver
 import evolver.PruneThenPopulateEvolver
 import fitness.FitnessMetric
 import fitness.MeanVarianceMetric
-import fitness.SharpeMetric
+import fitness.SharpeRatio
+import fitness.SortinoRatio
 import mutator.asset.AssetMutator
 import mutator.asset.RandomAssetMutator
 import mutator.weight.BoundaryWeightMutator
@@ -90,9 +91,9 @@ fun getFitnessMetric(args: List<String>, assetReturns: List<Pair<String, List<Do
         "sharpe" -> {
             checkArgsSize(params, 2)
             val rateFreeReturns = loadAssetReturns(params[0], compute = false).first().second
-            SharpeMetric(
+            SharpeRatio(
                 assetsToReturns = assetReturns,
-                avgRateFreeReturn = rateFreeReturns.subList(1, rateFreeReturns.size),
+                rateFreeReturns = rateFreeReturns.subList(1, rateFreeReturns.size),
                 annualizationRate = PositiveInt(params[1].toInt())
             )
         }
@@ -103,6 +104,16 @@ fun getFitnessMetric(args: List<String>, assetReturns: List<Pair<String, List<Do
                 lambda = toDouble(params[0])
             )
         }
+        "sortino" -> {
+            checkArgsSize(params, 1)
+            val rateFreeReturns = loadAssetReturns(params[0], compute = false).first().second
+            SortinoRatio(
+                assetsToReturns = assetReturns,
+                rateFreeReturns = rateFreeReturns.subList(1, rateFreeReturns.size),
+                annualizationRate = PositiveInt(params[1].toInt())
+            )
+        }
+        // TODO treynor metric
         else -> throw IllegalArgumentException("invalid fitness metric $type")
     }
 }

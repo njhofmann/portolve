@@ -10,23 +10,79 @@ import kotlin.collections.ArrayList
  */
 fun getParser(): ArgParser {
     val parser = ArgParser()
-    parser.addArg("fitness", "f", true, "fitness / scoring strategy to use")
-    parser.addArg("weightMutate", "wm", true, "weight mutation strategy")
-    parser.addArg("assetMutate", "am", true, "asset mutation strategy")
-    parser.addArg("selector", "s", true, "populator selection strategy")
+    parser.addArg("fitness", "f", true,
+        """
+        fitness / scoring strategy to rate the quality of each portfolio, each score is trying to be maximized:
+        - Mean Variance (mean-var): from Modern Portfolio Theory; weights the expected return and risk are combined into
+          a single objective control by unit weight c as (c * risk) - ((1 - c) * return)
+            - takes in a single unit double c to control the weighting between expected risk and return, if 0 only 
+              considers return and only risk if 1
+        - Sharpe ratio (sharpe): ratio of expected excess returns (portfolio returns - risk free return rate) to its
+          volatility as measured by standard deviations of excess returns
+            - takes in another path to risk-free return rates
+        - Sortino ratio (sortino): like the Sharpe ratio, but differentiating harmful volatility from overall volatility
+          by only considering negative returns
+            - takes in another path to risk-free return rates
+        - Treynor measure (treynor): reward-to-volatility ratio of a portfolio; defines the ratio of expected excess
+          returns (expected return of the portfolio minus a risk-free return rate), to systemic risk as a portfolio's
+          beta (tendency of a portfolio's return to change in response to the overall market)
+            - takes in another path to risk-free return rates
+            - takes in another path to overall market prices
+    """.trimIndent())
+    parser.addArg("weightMutate", "wm", true,
+        """
+        strategy for mutating the weights of a portfolio, requires:
+        - a double as the likelihood an asset is selected
+        - double for the range of percentages a weight can be mutated from, from [-r, +r] where r is the double
+        - (optional) double as a "final" weight mutation rate that will be linearly annealed to over the course of
+              evolution
+                
+        following strategies to select from the mutation range
+        - uniform: select as a uniform distribution
+        - gaussian: select as a Gaussian distribution, bounded at +/- two standard deviation
+        - boundary: just return the mutation rate, positive or negative
+    """.trimIndent())
+    parser.addArg("assetMutate", "am", true,
+    """
+        strategy for mutating assets making up a portfolio, requires:
+        - double as the likelihood an asset is chosen for mutation
+        - (optional) double as the "final" mutation rate that will be linearly annealed to over the course of evolution
+          from the starting mutation rate
+          
+        supports the following strategies for selecting a new asset:
+        - random: select a random asset from the universe assets not in the same portfolio
+    """.trimIndent())
+    parser.addArg("selector", "s", true,
+    """
+        strategy for pruning the weakest / selecting the best portfolios of a generation, requires:
+        - double as the percentage of each generation's size to keep
+        - (optional) double as the "final" selection rate that will be linearly annealed to over the course of evolution
+          from the starting selection rate
+          
+        supports the following strategies:
+        - tournament selection (tourny): 
+            - takes the integer value of k before other parameters
+        - truncation (trunc): keep the top percentage of each generation
+        - roulette wheel (roulette): 
+        - stochastic (stoch):
+    """.trimIndent())
     parser.addArg("populator", "p", true, "repopulator strategy")
-    parser.addArg("iterations", "i", false, "number of iterations / generations to produce")
-    parser.addArg("popSize", "pp", true, "size of generation's population")
-    parser.addArg("portSize", "pf", true, "size of each portfolio")
-    parser.addArg("assetsFile", "af", true, "path to assets file")
-    parser.addArg("boundary", "b", false, "greatest weight in portfolio an asset can take")
+    parser.addArg("iterations", "i", false,
+        """number of iterations / generations to run""")
+    parser.addArg("popSize", "pp", true,
+    """number of portfolios within each generation's population""")
+    parser.addArg("portSize", "pf", true,
+        """number of assets making up a portfolio""")
+    parser.addArg("assetsFile", "af", true, "path to CSV info of assets prices")
+    parser.addArg("boundary", "b", false,
+    """largest weight an asset in a portfolio can take""")
     parser.addArg(
         "termThresh", "tt", false,
-        "fitness score to terminate program once a solution reaches it"
+        """double that once a portfolio with a score greater than it is found, terminates the program"""
     )
     parser.addArg(
         "collect", "c", false,
-        "to collect any solutions that are above the terminate threshold"
+        """"collection" threshold, stores any portfolios with a score above it"""
     )
     return parser
 }
@@ -78,7 +134,10 @@ fun runEvolver(evolver: Evolver, assetNames: List<String>, collectSolutions: Dou
             validSolutions.addAll(generation.filter { it.second > collectSolutions })
         }
 
-        println("Generation $i, best: ${bestCurSolution.second}, average: ${generation.map { it.second }.average()}")
+        println("Generation $i, " +
+                "best all: ${bestSolution.second}, " +
+                "best: ${bestCurSolution.second}, " +
+                "average: ${generation.map { it.second }.average()}")
         i++
     }
 

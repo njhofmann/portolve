@@ -1,16 +1,17 @@
 ## Checklist
+1. implement treynor metric
+    1. docs
+    1. parser call
+1. finish arg parser desps
 1. README overhaul
     1. details of implementation
     1. how to run program
-    1. expected inputs in relation to ratios!
+    1. expected inputs in relation to ratios & time
     1. how to setup project w kotlin and gradle
 1. misc
     1. double check TODO comments
     1. replace print statements with logging
     1. documentation
-1. additional fitness functions
-    1. treynor metric
-    1. sortino ratio
     
 # To Review
 1. prevent duplicate assets in crossover
