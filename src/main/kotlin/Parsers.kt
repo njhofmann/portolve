@@ -1,10 +1,7 @@
 import evolver.Evolver
 import evolver.PopulateThenPruneEvolver
 import evolver.PruneThenPopulateEvolver
-import fitness.FitnessMetric
-import fitness.MeanVarianceMetric
-import fitness.SharpeRatio
-import fitness.SortinoRatio
+import fitness.*
 import mutator.asset.AssetMutator
 import mutator.asset.RandomAssetMutator
 import mutator.weight.BoundaryWeightMutator
@@ -31,7 +28,7 @@ fun getWeightMutator(args: List<String>, iterations: PositiveInt?): WeightMutato
                 finalMutationRate = toDouble(params[2]),
                 iterations = iterations
             )
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException("invalid number of parameters for uniform weight mutator")
         }
         "gaussian" -> when (params.size) {
             2 -> GaussianWeightMutator(
@@ -44,7 +41,7 @@ fun getWeightMutator(args: List<String>, iterations: PositiveInt?): WeightMutato
                 finalMutationRate = toDouble(params[2]),
                 iterations = iterations
             )
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException("invalid number of parameters for Gaussian weight mutator")
         }
         "boundary" -> when (params.size) {
             2 -> BoundaryWeightMutator(
@@ -57,7 +54,7 @@ fun getWeightMutator(args: List<String>, iterations: PositiveInt?): WeightMutato
                 finalMutationRate = toDouble(params[2]),
                 iterations = iterations
             )
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException("invalid number of parameters for boundary weight mutator")
         }
         else -> throw IllegalArgumentException("invalid weight mutator $type")
     }
@@ -78,7 +75,7 @@ fun getAssetMutator(args: List<String>, assetUniverse: Int, iterations: Positive
                 finalMutationRate = toDouble(params[1]),
                 iterations = iterations
             )
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException("invalid number of parameters for random asset mutation")
         }
         else -> throw IllegalArgumentException("invalid asset mutator $type")
     }
@@ -88,29 +85,29 @@ fun getFitnessMetric(args: List<String>, assetReturns: List<Pair<String, List<Do
     checkNonZeroArgs(args)
     val (type, params) = splitListHead(args)
     return when (type) {
-        "sharpe" -> {
-            checkArgsSize(params, 2)
-            val rateFreeReturns = loadAssetReturns(params[0], compute = false).first().second
-            SharpeRatio(
-                assetsToReturns = assetReturns,
-                rateFreeReturns = rateFreeReturns.subList(1, rateFreeReturns.size),
-                annualizationRate = PositiveInt(params[1].toInt())
+        "return-risk" -> when (params.size) {
+            // TODO figure out how to do optional arguments for 2-3 arg counts. subparsing?
+            1 -> ReturnRiskRatio(
+                assetsToReturns = assetReturns
             )
+            4 -> {
+                val rateFreeReturns = loadAssetReturns(params[0], compute = false).first().second
+                val annualizationRate = params[1].toInt()
+                val onlyNegativeReturns = params[2].toBoolean()
+                ReturnRiskRatio(
+                    assetsToReturns = assetReturns,
+                    rateFreeReturns = rateFreeReturns,
+                    annualizationRate = PositiveInt(annualizationRate),
+                    onlyNegativeReturns = onlyNegativeReturns
+                )
+            }
+            else -> throw IllegalArgumentException("invalid number of parameters for return risk score")
         }
         "mean-var" -> {
             checkArgsSize(params, 1)
             MeanVarianceMetric(
                 assetsToReturns = assetReturns,
                 lambda = toDouble(params[0])
-            )
-        }
-        "sortino" -> {
-            checkArgsSize(params, 1)
-            val rateFreeReturns = loadAssetReturns(params[0], compute = false).first().second
-            SortinoRatio(
-                assetsToReturns = assetReturns,
-                rateFreeReturns = rateFreeReturns.subList(1, rateFreeReturns.size),
-                annualizationRate = PositiveInt(params[1].toInt())
             )
         }
         // TODO treynor metric
@@ -197,7 +194,7 @@ fun getSelector(args: List<String>, iterations: PositiveInt?): Selector {
                 endKeepPercent = toDouble(params[2]),
                 iterations = iterations
             )
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException("invalid number of parameters for tournament selection")
         }
         "trunc" -> when (params.size) {
             1 -> TruncateSelector(keepPercent = toDouble(params[0]))
@@ -206,7 +203,7 @@ fun getSelector(args: List<String>, iterations: PositiveInt?): Selector {
                 endKeepPercent = toDouble(params[1]),
                 iterations = iterations
             )
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException("invalid number of parameters for truncation selection")
         }
         "roulette" -> when (params.size) {
             1 -> RouletteWheelSelector(keepPercent = toDouble(params[0]))
@@ -215,7 +212,7 @@ fun getSelector(args: List<String>, iterations: PositiveInt?): Selector {
                 endKeepPercent = toDouble(params[1]),
                 iterations = iterations
             )
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException("invalid number of parameters for roulette wheel selection")
         }
         "stoch" -> when (params.size) {
             1 -> StochasticUniversalSelector(keepPercent = toDouble(params[0]))
@@ -224,7 +221,7 @@ fun getSelector(args: List<String>, iterations: PositiveInt?): Selector {
                 endKeepPercent = toDouble(params[1]),
                 iterations = iterations
             )
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException("invalid number of parameters for stochastic selection")
         }
         else -> throw IllegalArgumentException("invalid weight mutator $type")
     }

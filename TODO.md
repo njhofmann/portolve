@@ -1,4 +1,7 @@
 ## Checklist
+1. finish parsing for return-risk ratio
+    1. sub argument parser
+1. CAPM / Jensen's alpha
 1. implement treynor metric
     1. docs
     1. parser call
